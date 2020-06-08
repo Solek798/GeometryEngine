@@ -28,7 +28,8 @@ namespace geo {
         VkPipelineViewportStateCreateInfo viewportStateCreateInfo;
         VkPipelineRasterizationStateCreateInfo rasterizationStateCreateInfo;
         VkPipelineMultisampleStateCreateInfo multisampleStateCreateInfo;
-        VkPipelineColorBlendAttachmentState  colorBlendAttachmentState;
+        VkPipelineColorBlendAttachmentState colorBlendAttachmentState;
+        VkPipelineColorBlendStateCreateInfo colorBlendStateCreateInfo;
 
         sp<DeviceManager> deviceManager;
     };

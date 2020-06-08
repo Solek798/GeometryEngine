@@ -113,6 +113,17 @@ void geo::Pipeline::setup() {
     colorBlendAttachmentState.alphaBlendOp = VK_BLEND_OP_ADD;
     colorBlendAttachmentState.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 
+    colorBlendStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+    colorBlendStateCreateInfo.pNext = nullptr;
+    colorBlendStateCreateInfo.flags = 0;
+    colorBlendStateCreateInfo.logicOpEnable = VK_FALSE;
+    colorBlendStateCreateInfo.logicOp = VK_LOGIC_OP_NO_OP;
+    colorBlendStateCreateInfo.attachmentCount = 1;
+    colorBlendStateCreateInfo.pAttachments = &colorBlendAttachmentState;
+    colorBlendStateCreateInfo.blendConstants[0] = VK_BLEND_FACTOR_CONSTANT_COLOR;
+    colorBlendStateCreateInfo.blendConstants[1] = VK_BLEND_FACTOR_CONSTANT_COLOR;
+    colorBlendStateCreateInfo.blendConstants[2] = VK_BLEND_FACTOR_CONSTANT_COLOR;
+    colorBlendStateCreateInfo.blendConstants[3] = VK_BLEND_FACTOR_CONSTANT_COLOR;
 }
 
 void geo::Pipeline::shutdown() {
