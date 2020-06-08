@@ -4,24 +4,28 @@
 
 #include "Graphics.h"
 #include "vulkan/vulkan.h"
+#include "IO/FileInput.h"
 #include <utility>
 #include <iostream>
 
 geo::Graphics::Graphics(VkInstance instance, VkSurfaceKHR surface)
     : instance(instance)
     , surface(surface)
-    , currentDevice(nullptr) { }
+    , deviceManager(nullptr)
+    , pipeline(nullptr) { }
 
-geo::Graphics::Graphics(VkInstance instance, VkSurfaceKHR surface, sp<geo::Device> currentDevice)
+geo::Graphics::Graphics(VkInstance instance, VkSurfaceKHR surface, sp<DeviceManager> deviceManager)
     : instance(instance)
     , surface(surface)
-    , currentDevice(std::move(currentDevice)) { }
+    , deviceManager(std::move(deviceManager))
+    , pipeline(nullptr) { }
 
 void geo::Graphics::setup() {
-
+    auto physicalHandle = deviceManager->getCurrentDevice()->getPhysicalHandle();
+    auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
 
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(currentDevice->getPhysicalHandle(), surface, &surfaceCapabilities);
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalHandle, surface, &surfaceCapabilities);
 
 #ifdef GEO_DEBUG
     std::cout << surfaceCapabilities.minImageCount << std::endl;
@@ -37,9 +41,9 @@ void geo::Graphics::setup() {
 #endif
 
     uint32_t amountOfFormats = 0;
-    vkGetPhysicalDeviceSurfaceFormatsKHR(currentDevice->getPhysicalHandle(), surface, &amountOfFormats, nullptr);
+    vkGetPhysicalDeviceSurfaceFormatsKHR(physicalHandle, surface, &amountOfFormats, nullptr);
     std::vector<VkSurfaceFormatKHR> surfaceFormats{ amountOfFormats };
-    vkGetPhysicalDeviceSurfaceFormatsKHR(currentDevice->getPhysicalHandle(), surface, &amountOfFormats, surfaceFormats.data());
+    vkGetPhysicalDeviceSurfaceFormatsKHR(physicalHandle, surface, &amountOfFormats, surfaceFormats.data());
 
 #ifdef GEO_DEBUG
     std::cout << "Formats: " << std::endl;
@@ -49,9 +53,9 @@ void geo::Graphics::setup() {
 #endif
 
     uint32_t amountOfPresentModes = 0;
-    vkGetPhysicalDeviceSurfacePresentModesKHR(currentDevice->getPhysicalHandle(), surface, &amountOfPresentModes, nullptr);
+    vkGetPhysicalDeviceSurfacePresentModesKHR(physicalHandle, surface, &amountOfPresentModes, nullptr);
     std::vector<VkPresentModeKHR> presentModes{ amountOfPresentModes };
-    vkGetPhysicalDeviceSurfacePresentModesKHR(currentDevice->getPhysicalHandle(), surface, &amountOfPresentModes, presentModes.data());
+    vkGetPhysicalDeviceSurfacePresentModesKHR(physicalHandle, surface, &amountOfPresentModes, presentModes.data());
 
 #ifdef GEO_DEBUG
     std::cout << "Presentation Modes: " << std::endl;
@@ -59,6 +63,15 @@ void geo::Graphics::setup() {
         std::cout << modes << std::endl;
     }
 #endif
+
+    // the validation layer wants this to get validated. TODO: replace with proper solution
+    for (int i=0 ; i<deviceManager->getCurrentDevice()->getQueueFamilies().size() ; i++) {
+        VkBool32 valid;
+        vkGetPhysicalDeviceSurfaceSupportKHR(physicalHandle, i, surface, &valid);
+
+        //if (!valid) throw 1; // TODO: insert Exception
+    }
+
 
     swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainCreateInfo.pNext = nullptr;
@@ -79,12 +92,12 @@ void geo::Graphics::setup() {
     swapchainCreateInfo.clipped = VK_TRUE;
     swapchainCreateInfo.oldSwapchain = VK_NULL_HANDLE;
 
-    vkCreateSwapchainKHR(currentDevice->getLogicalHandle(), &swapchainCreateInfo, nullptr, &swapchain);
+    vkCreateSwapchainKHR(logicalHandle, &swapchainCreateInfo, nullptr, &swapchain);
 
     uint32_t amountOfImages = 0;
-    vkGetSwapchainImagesKHR(currentDevice->getLogicalHandle(), swapchain, &amountOfImages, nullptr);
+    vkGetSwapchainImagesKHR(logicalHandle, swapchain, &amountOfImages, nullptr);
     std::vector<VkImage> images{amountOfImages};
-    vkGetSwapchainImagesKHR(currentDevice->getLogicalHandle(), swapchain, &amountOfImages, images.data());
+    vkGetSwapchainImagesKHR(logicalHandle, swapchain, &amountOfImages, images.data());
 
     VkImageViewCreateInfo imageViewCreateInfo;
     imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -103,30 +116,30 @@ void geo::Graphics::setup() {
                                                                    0,
                                                                    1};
 
-    images.resize(images.size());
+    imageViews.resize(images.size());
 
     for (int i=0 ; i<images.size() ; i++) {
         imageViewCreateInfo.image = images[i];
-        vkCreateImageView(currentDevice->getLogicalHandle(), &imageViewCreateInfo, nullptr, &imageViews[i]);
+        vkCreateImageView(logicalHandle, &imageViewCreateInfo, nullptr, &imageViews[i]);
     }
 
+    pipeline = std::make_shared<Pipeline>(deviceManager);
+    pipeline->setup();
 }
 
 void geo::Graphics::shutdown() {
+    auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
+
+    pipeline->shutdown();
 
     for (const auto& imageView : imageViews) {
-        vkDestroyImageView(currentDevice->getLogicalHandle(), imageView , nullptr);
+        vkDestroyImageView(logicalHandle, imageView , nullptr);
     }
-    vkDestroySwapchainKHR(currentDevice->getLogicalHandle(), swapchain, nullptr);
+    vkDestroySwapchainKHR(logicalHandle, swapchain, nullptr);
     vkDestroySurfaceKHR(instance, surface, nullptr);
 }
 
-void geo::Graphics::setCurrentDevice(sp<geo::Device> newDevice) {
-    currentDevice = std::move(newDevice);
+void geo::Graphics::setDeviceManager(sp<geo::DeviceManager> newDeviceManager) {
+    deviceManager = std::move(newDeviceManager);
 }
-
-geo::Device &geo::Graphics::getCurrentDevice() const {
-    return *currentDevice;
-}
-
 

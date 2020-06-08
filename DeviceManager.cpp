@@ -35,6 +35,14 @@ sp<geo::Device> geo::DeviceManager::getDevice(int index) const {
     return devices[index];
 }
 
+sp<geo::Device> geo::DeviceManager::getCurrentDevice() const {
+    return devices[currentDeviceIndex];
+}
+
+void geo::DeviceManager::setCurrentDevice(int index) {
+    currentDeviceIndex = index
+}
+
 
 
 

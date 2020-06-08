@@ -117,5 +117,9 @@ VkDevice geo::Device::getLogicalHandle() const {
     return logicalHandle;
 }
 
+std::vector<VkQueueFamilyProperties> geo::Device::getQueueFamilies() const {
+    return queueFamilyProperties;
+}
+
 
 

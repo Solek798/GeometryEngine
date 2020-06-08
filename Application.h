@@ -34,8 +34,8 @@ namespace geo {
 
         SDL_Window* window;
 
-        up<DeviceManager> deviceManager;
-        up<Graphics> graphics;
+        sp<DeviceManager> deviceManager;
+        sp<Graphics> graphics;
     };
 }
 

@@ -62,10 +62,10 @@ void geo::Application::setup() {
     VkSurfaceKHR surface;
     SDL_Vulkan_CreateSurface(window, instance, &surface);
 
-    deviceManager = std::make_unique<DeviceManager>(instance);
+    deviceManager = std::make_shared<DeviceManager>(instance);
     deviceManager->setup();
 
-    graphics = std::make_unique<Graphics>(instance, surface, deviceManager->getDevice(0));
+    graphics = std::make_shared<Graphics>(instance, surface, deviceManager);
     graphics->setup();
 }
 

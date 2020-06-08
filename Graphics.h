@@ -7,19 +7,20 @@
 
 #include "Manageable.h"
 #include "Device.h"
+#include "DeviceManager.h"
+#include "Pipeline.h"
 
 namespace geo {
     class Graphics : public Manageable {
     public:
         Graphics(VkInstance instance, VkSurfaceKHR surface);
-        Graphics(VkInstance instance, VkSurfaceKHR surface, sp<Device> currentDevice);
+        Graphics(VkInstance instance, VkSurfaceKHR surface, sp<DeviceManager> deviceManager);
         virtual ~Graphics() = default;
 
         void setup() override;
         void shutdown() override;
 
-        void setCurrentDevice(sp<Device> newDevice);
-        [[nodiscard]] Device& getCurrentDevice() const;
+        void setDeviceManager(sp<DeviceManager> newDeviceManager);
 
     private:
         VkInstance instance;
@@ -28,7 +29,8 @@ namespace geo {
         VkSwapchainKHR swapchain;
         std::vector<VkImageView> imageViews;
 
-        sp<Device> currentDevice;
+        sp<DeviceManager> deviceManager;
+        sp<Pipeline> pipeline;
     };
 }
 
