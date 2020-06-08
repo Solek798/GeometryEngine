@@ -48,7 +48,6 @@ void geo::Pipeline::setup() {
     fragStageCreateInfo.module = fragModule;
     fragStageCreateInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-    VkPipelineVertexInputStateCreateInfo inputCreateInfo;
     inputCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     inputCreateInfo.pNext = nullptr;
     inputCreateInfo.flags = 0;
@@ -57,7 +56,6 @@ void geo::Pipeline::setup() {
     inputCreateInfo.vertexAttributeDescriptionCount = 0; // TODO does not work in real Application!
     inputCreateInfo.pVertexAttributeDescriptions = nullptr; // TODO does not work in real Application!
 
-    VkPipelineInputAssemblyStateCreateInfo inputAssemblyCreateInfo;
     inputAssemblyCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     inputAssemblyCreateInfo.pNext = nullptr;
     inputAssemblyCreateInfo.flags = 0;
@@ -105,6 +103,16 @@ void geo::Pipeline::setup() {
     multisampleStateCreateInfo.pSampleMask = nullptr;
     multisampleStateCreateInfo.alphaToCoverageEnable = VK_FALSE;
     multisampleStateCreateInfo.alphaToOneEnable = VK_FALSE;
+
+    colorBlendAttachmentState.blendEnable = VK_TRUE;
+    colorBlendAttachmentState.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    colorBlendAttachmentState.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    colorBlendAttachmentState.colorBlendOp = VK_BLEND_OP_ADD;
+    colorBlendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendAttachmentState.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendAttachmentState.alphaBlendOp = VK_BLEND_OP_ADD;
+    colorBlendAttachmentState.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+
 }
 
 void geo::Pipeline::shutdown() {

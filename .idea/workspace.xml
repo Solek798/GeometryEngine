@@ -12,18 +12,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c65e8a7-e153-4f52-ab5e-1db22bec643e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Application.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Application.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Application.h" beforeDir="false" afterPath="$PROJECT_DIR$/Application.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Device.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Device.h" beforeDir="false" afterPath="$PROJECT_DIR$/Device.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DeviceManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/DeviceManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DeviceManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/DeviceManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GlobaleScope.h" beforeDir="false" afterPath="$PROJECT_DIR$/GlobaleScope.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Graphics.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Graphics.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Graphics.h" beforeDir="false" afterPath="$PROJECT_DIR$/Graphics.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Pipeline.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipeline.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pipeline.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +71,7 @@
       <workItem from="1587211775404" duration="14910000" />
       <workItem from="1589793305884" duration="20618000" />
       <workItem from="1589978940569" duration="25458000" />
-      <workItem from="1591647644189" duration="3873000" />
+      <workItem from="1591647644189" duration="6260000" />
     </task>
     <servers />
   </component>

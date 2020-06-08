@@ -21,11 +21,14 @@ namespace geo {
         VkShaderModuleCreateInfo vertexModuleCreateInfo, fragModuleCreateInfo;
         VkShaderModule fragModule, vertexModule;
         VkPipelineShaderStageCreateInfo vertexStageCreateInfo, fragStageCreateInfo;
+        VkPipelineVertexInputStateCreateInfo inputCreateInfo;
+        VkPipelineInputAssemblyStateCreateInfo inputAssemblyCreateInfo;
         VkViewport viewport;
         VkRect2D scissor;
         VkPipelineViewportStateCreateInfo viewportStateCreateInfo;
         VkPipelineRasterizationStateCreateInfo rasterizationStateCreateInfo;
         VkPipelineMultisampleStateCreateInfo multisampleStateCreateInfo;
+        VkPipelineColorBlendAttachmentState  colorBlendAttachmentState;
 
         sp<DeviceManager> deviceManager;
     };
