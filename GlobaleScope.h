@@ -19,4 +19,7 @@ if (result != VK_SUCCESS) { \
 template <typename T> using sp = std::shared_ptr<T>;
 template <typename T> using up = std::unique_ptr<T>;
 
+#define WINDOW_WIDTH 600
+#define WINDOW_HEIGHT 400
+
 #endif //GEOMETRYENGINE_GLOBALESCOPE_H

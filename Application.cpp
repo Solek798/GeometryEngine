@@ -14,7 +14,7 @@ void geo::Application::setup() {
     VkResult result;
 
     SDL_Init(SDL_INIT_EVERYTHING);
-    window = SDL_CreateWindow("Geometry Engine", 100, 100, 600, 400, SDL_WINDOW_VULKAN);
+    window = SDL_CreateWindow("Geometry Engine", 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_VULKAN);
 
     uint32_t amountOfSdlExtentions = 0;
 
@@ -59,18 +59,23 @@ void geo::Application::setup() {
     result = vkCreateInstance(&instanceCreateInfo, nullptr, &instance);
     VK_ASSERT(result);
 
+    VkSurfaceKHR surface;
     SDL_Vulkan_CreateSurface(window, instance, &surface);
 
     deviceManager = std::make_unique<DeviceManager>(instance);
     deviceManager->setup();
 
+    graphics = std::make_unique<Graphics>(instance, surface, deviceManager->getDevice(0));
+    graphics->setup();
 }
 
 void geo::Application::shutdown() {
+    graphics->shutdown();
+    graphics.reset();
+
     deviceManager->shutdown();
     deviceManager.reset();
 
-    vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyInstance(instance, nullptr);
 
     SDL_DestroyWindow(window);

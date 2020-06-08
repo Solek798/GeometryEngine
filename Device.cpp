@@ -30,6 +30,11 @@ void geo::Device::setup() {
 
     VkPhysicalDeviceFeatures usedFeatures{};
 
+    // TODO: BAD INIT
+    const std::vector<const char*> deviceExtentions {
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME
+    };
+
     VkDeviceCreateInfo deviceCreateInfo;
     deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     deviceCreateInfo.pNext = nullptr;
@@ -38,8 +43,8 @@ void geo::Device::setup() {
     deviceCreateInfo.pQueueCreateInfos = queueCreateInfos.data();
     deviceCreateInfo.enabledLayerCount = 0;
     deviceCreateInfo.ppEnabledLayerNames = nullptr;
-    deviceCreateInfo.enabledExtensionCount = 0;
-    deviceCreateInfo.ppEnabledExtensionNames = nullptr;
+    deviceCreateInfo.enabledExtensionCount = deviceExtentions.size();
+    deviceCreateInfo.ppEnabledExtensionNames = deviceExtentions.data();
     deviceCreateInfo.pEnabledFeatures = &usedFeatures;
 
     result = vkCreateDevice(physicalHandle, &deviceCreateInfo, nullptr, &logicalHandle);
@@ -102,6 +107,14 @@ void geo::Device::debugPrintDeviceProperty() const {
     std::cout << std::endl;
 
     std::cout << std::endl;
+}
+
+VkPhysicalDevice geo::Device::getPhysicalHandle() const {
+    return physicalHandle;
+}
+
+VkDevice geo::Device::getLogicalHandle() const {
+    return logicalHandle;
 }
 
 

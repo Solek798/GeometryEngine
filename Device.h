@@ -18,6 +18,9 @@ namespace geo {
         void setup() override;
         void shutdown() override;
 
+        [[nodiscard]] VkPhysicalDevice getPhysicalHandle() const;
+        [[nodiscard]] VkDevice getLogicalHandle() const;
+
         void debugPrintDeviceProperty() const;
 
     private:
