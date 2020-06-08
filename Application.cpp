@@ -42,10 +42,12 @@ void geo::Application::setup() {
     std::vector<VkExtensionProperties> extensions(amountOfExtensions);
     vkEnumerateInstanceExtensionProperties(nullptr, &amountOfExtensions, extensions.data());
 
+#ifdef GEO_DEBUG
     std::cout << "Amount of Extensions: " << amountOfExtensions << std::endl;
     for (const auto& ext : extensions) {
         std::cout << ext.extensionName << std::endl;
     }
+#endif
 
     instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceCreateInfo.pNext = nullptr;

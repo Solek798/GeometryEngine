@@ -3,7 +3,7 @@ project(GeometryEngine)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_compile_definitions(GEO_DEBUG)
+#add_compile_definitions(GEO_DEBUG)
 
 find_package(Vulkan)
 find_package(SDL2)
