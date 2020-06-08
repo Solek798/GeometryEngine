@@ -40,7 +40,7 @@ sp<geo::Device> geo::DeviceManager::getCurrentDevice() const {
 }
 
 void geo::DeviceManager::setCurrentDevice(int index) {
-    currentDeviceIndex = index
+    currentDeviceIndex = index;
 }
 
 

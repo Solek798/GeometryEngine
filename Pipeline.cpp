@@ -124,11 +124,23 @@ void geo::Pipeline::setup() {
     colorBlendStateCreateInfo.blendConstants[1] = VK_BLEND_FACTOR_CONSTANT_COLOR;
     colorBlendStateCreateInfo.blendConstants[2] = VK_BLEND_FACTOR_CONSTANT_COLOR;
     colorBlendStateCreateInfo.blendConstants[3] = VK_BLEND_FACTOR_CONSTANT_COLOR;
+
+    layoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    layoutCreateInfo.pNext = nullptr;
+    layoutCreateInfo.flags = 0;
+    layoutCreateInfo.setLayoutCount = 0; // TODO: enable to be able to use uniforms in shader
+    layoutCreateInfo.pSetLayouts = nullptr; // TODO: enable to be able to use uniforms in shader
+    layoutCreateInfo.pushConstantRangeCount = 0; // TODO: enable to be able to use uniforms in shader
+    layoutCreateInfo.pPushConstantRanges = nullptr; // TODO: enable to be able to use uniforms in shader
+    vkCreatePipelineLayout(logicalHandle, &layoutCreateInfo, nullptr, &layout);
+
+
 }
 
 void geo::Pipeline::shutdown() {
     auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
 
+    vkDestroyPipelineLayout(logicalHandle, layout, nullptr);
     vkDestroyShaderModule(logicalHandle, vertexModule, nullptr);
     vkDestroyShaderModule(logicalHandle, fragModule, nullptr);
 }

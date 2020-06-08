@@ -30,6 +30,8 @@ namespace geo {
         VkPipelineMultisampleStateCreateInfo multisampleStateCreateInfo;
         VkPipelineColorBlendAttachmentState colorBlendAttachmentState;
         VkPipelineColorBlendStateCreateInfo colorBlendStateCreateInfo;
+        VkPipelineLayoutCreateInfo layoutCreateInfo;
+        VkPipelineLayout layout;
 
         sp<DeviceManager> deviceManager;
     };
