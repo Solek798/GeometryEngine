@@ -57,6 +57,10 @@ void geo::Device::setup() {
             vkGetDeviceQueue(logicalHandle, i, j, &(queues.back().back()));
         }
     }
+
+#ifdef GEO_STATUS_NOTIFICATIONS
+    std::cout << "#> Device ready!" << std::endl;
+#endif
 }
 
 void geo::Device::shutdown() {

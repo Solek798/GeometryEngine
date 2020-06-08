@@ -15,6 +15,10 @@ void geo::DeviceManager::setup() {
     std::vector<VkPhysicalDevice> physicalDevices(deviceCount);
     vkEnumeratePhysicalDevices(instance, &deviceCount, physicalDevices.data());
 
+#ifdef GEO_STATUS_NOTIFICATIONS
+    std::cout << "#> DeviceManager ready!" << std::endl;
+#endif
+
     for (int i=0 ; i<deviceCount ; i++) {
         devices.emplace_back(std::make_shared<Device>(physicalDevices[0]));
         devices.back()->setup();

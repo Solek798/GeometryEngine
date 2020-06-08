@@ -27,7 +27,7 @@ void geo::Graphics::setup() {
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalHandle, surface, &surfaceCapabilities);
 
-#ifdef GEO_DEBUG
+#ifdef GEO_DEBUG_STATS
     std::cout << surfaceCapabilities.minImageCount << std::endl;
     std::cout << surfaceCapabilities.maxImageCount << std::endl;
     std::cout << surfaceCapabilities.currentExtent.width << ", " << surfaceCapabilities.currentExtent.height << std::endl;
@@ -45,7 +45,7 @@ void geo::Graphics::setup() {
     std::vector<VkSurfaceFormatKHR> surfaceFormats{ amountOfFormats };
     vkGetPhysicalDeviceSurfaceFormatsKHR(physicalHandle, surface, &amountOfFormats, surfaceFormats.data());
 
-#ifdef GEO_DEBUG
+#ifdef GEO_DEBUG_STATS
     std::cout << "Formats: " << std::endl;
     for (const auto& format : surfaceFormats) {
         std::cout << format.format << std::endl;
@@ -57,7 +57,7 @@ void geo::Graphics::setup() {
     std::vector<VkPresentModeKHR> presentModes{ amountOfPresentModes };
     vkGetPhysicalDeviceSurfacePresentModesKHR(physicalHandle, surface, &amountOfPresentModes, presentModes.data());
 
-#ifdef GEO_DEBUG
+#ifdef GEO_DEBUG_STATS
     std::cout << "Presentation Modes: " << std::endl;
     for (const auto& modes : presentModes) {
         std::cout << modes << std::endl;
@@ -122,6 +122,10 @@ void geo::Graphics::setup() {
         imageViewCreateInfo.image = images[i];
         vkCreateImageView(logicalHandle, &imageViewCreateInfo, nullptr, &imageViews[i]);
     }
+
+#ifdef GEO_STATUS_NOTIFICATIONS
+    std::cout << "#> Graphics ready!" << std::endl;
+#endif
 
     pipeline = std::make_shared<Pipeline>(deviceManager);
     pipeline->setup();

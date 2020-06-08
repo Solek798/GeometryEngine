@@ -3,6 +3,7 @@
 //
 
 #include <utility>
+#include <iostream>
 #include "Pipeline.h"
 #include "IO/FileInput.h"
 
@@ -135,6 +136,9 @@ void geo::Pipeline::setup() {
     vkCreatePipelineLayout(logicalHandle, &layoutCreateInfo, nullptr, &layout);
 
 
+#ifdef GEO_STATUS_NOTIFICATIONS
+    std::cout << "#> Pipeline ready!" << std::endl;
+#endif
 }
 
 void geo::Pipeline::shutdown() {

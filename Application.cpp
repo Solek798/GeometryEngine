@@ -42,7 +42,7 @@ void geo::Application::setup() {
     std::vector<VkExtensionProperties> extensions(amountOfExtensions);
     vkEnumerateInstanceExtensionProperties(nullptr, &amountOfExtensions, extensions.data());
 
-#ifdef GEO_DEBUG
+#ifdef GEO_DEBUG_STATS
     std::cout << "Amount of Extensions: " << amountOfExtensions << std::endl;
     for (const auto& ext : extensions) {
         std::cout << ext.extensionName << std::endl;
@@ -63,6 +63,10 @@ void geo::Application::setup() {
 
     VkSurfaceKHR surface;
     SDL_Vulkan_CreateSurface(window, instance, &surface);
+
+#ifdef GEO_STATUS_NOTIFICATIONS
+    std::cout << "#> Application ready!" << std::endl;
+#endif
 
     deviceManager = std::make_shared<DeviceManager>(instance);
     deviceManager->setup();

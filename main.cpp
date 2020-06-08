@@ -6,10 +6,12 @@ int main() {
 
   app.setup();
 
-#ifdef GEO_DEBUG
+#ifdef GEO_DEBUG_STATS
   app.getDeviceManager().getDevice(0)->debugPrintDeviceProperty();
 #endif
-  std::cout << "Application ready!" << std::endl;
+#ifdef GEO_STATUS_NOTIFICATIONS
+    std::cout << "#> Setup finished!" << std::endl;
+#endif
 
   while(app.run());
 
