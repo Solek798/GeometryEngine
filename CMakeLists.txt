@@ -6,6 +6,6 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(Vulkan)
 find_package(SDL2)
 
-add_executable(GeometryEngine main.cpp Application.cpp Application.h GlobaleScope.h DeviceManager.cpp DeviceManager.h Device.cpp Device.h Manageable.h)
+add_executable(GeometryEngine main.cpp Application.cpp Application.h GlobaleScope.h DeviceManager.cpp DeviceManager.h Device.cpp Device.h Manageable.h ECS/Component.cpp ECS/Component.h)
 
 target_link_libraries(${PROJECT_NAME} vulkan SDL2)
