@@ -21,6 +21,8 @@ namespace geo {
         void setup() override;
         void shutdown() override;
 
+        void draw();
+
         void setDeviceManager(sp<DeviceManager> newDeviceManager);
 
     private:

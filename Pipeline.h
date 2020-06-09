@@ -18,6 +18,8 @@ namespace geo {
         void shutdown() override;
 
         [[nodiscard]] const VkRenderPass& getRenderPass() const;
+        [[nodiscard]] const VkPipeline& getVulkanPipeline() const;
+
 
     private:
         VkShaderModuleCreateInfo vertexModuleCreateInfo, fragModuleCreateInfo;
