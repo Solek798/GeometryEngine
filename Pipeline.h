@@ -32,6 +32,8 @@ namespace geo {
         VkPipelineColorBlendStateCreateInfo colorBlendStateCreateInfo;
         VkPipelineLayoutCreateInfo layoutCreateInfo;
         VkPipelineLayout layout;
+        VkAttachmentDescription attachmentDescription;
+        VkAttachmentReference attachmentReference;
 
         sp<DeviceManager> deviceManager;
     };

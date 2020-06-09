@@ -135,6 +135,20 @@ void geo::Pipeline::setup() {
     layoutCreateInfo.pPushConstantRanges = nullptr; // TODO: enable to be able to use uniforms in shader
     vkCreatePipelineLayout(logicalHandle, &layoutCreateInfo, nullptr, &layout);
 
+    // Start Attachments
+    attachmentDescription.flags = 0;
+    attachmentDescription.format = VK_FORMAT_B8G8R8A8_UNORM; //TODO: REALLY BAD INIT; should be the same as in SwapchainCreateInfo
+    attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT; // TODO: Change if AA enabled
+    attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; // I am not sure what this is good for
+    attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR;
+
+    attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    attachmentReference.attachment = 0;
+
 
 #ifdef GEO_STATUS_NOTIFICATIONS
     std::cout << "#> Pipeline ready!" << std::endl;
