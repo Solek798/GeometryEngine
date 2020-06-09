@@ -47,6 +47,12 @@ void geo::DeviceManager::setCurrentDevice(int index) {
     currentDeviceIndex = index;
 }
 
+void geo::DeviceManager::waitForAllDevices() const {
+    for (const auto& device : devices) {
+        vkDeviceWaitIdle(device->getLogicalHandle());
+    }
+}
+
 
 
 

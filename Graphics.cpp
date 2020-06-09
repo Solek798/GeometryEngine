@@ -146,12 +146,22 @@ void geo::Graphics::setup() {
         vkCreateFramebuffer(logicalHandle, &(framebufferCreateInfos[i]), nullptr, &(framebuffer[i]));
     }
 
-    command = std::make_shared<Command>(deviceManager);
+    command = std::make_shared<Command>(deviceManager, pipeline, framebuffer);
     command->setup();
+
+    semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    semaphoreCreateInfo.pNext = nullptr;
+    semaphoreCreateInfo.flags = 0;
+
+    vkCreateSemaphore(logicalHandle, &semaphoreCreateInfo, nullptr, &semaphoreImageAvailable);
+    vkCreateSemaphore(logicalHandle, &semaphoreCreateInfo, nullptr, &semaphoreRenderingDone);
 }
 
 void geo::Graphics::shutdown() {
     auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
+
+    vkDestroySemaphore(logicalHandle, semaphoreImageAvailable, nullptr);
+    vkDestroySemaphore(logicalHandle, semaphoreRenderingDone, nullptr);
 
     command->shutdown();
 
@@ -171,4 +181,38 @@ void geo::Graphics::shutdown() {
 void geo::Graphics::setDeviceManager(sp<geo::DeviceManager> newDeviceManager) {
     deviceManager = std::move(newDeviceManager);
 }
+
+void geo::Graphics::draw() {
+    auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
+    uint32_t imageIndex = 0;
+
+    vkAcquireNextImageKHR(logicalHandle, swapchain, std::numeric_limits<uint64_t>::max(), semaphoreImageAvailable, VK_NULL_HANDLE, &imageIndex);
+
+    VkSubmitInfo submitInfo;
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = nullptr;
+    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.pWaitSemaphores = &semaphoreImageAvailable;
+    std::vector<VkPipelineStageFlags> flags {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+    submitInfo.pWaitDstStageMask = flags.data();
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &(command->getCommandBuffers()[imageIndex]);
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores = &semaphoreRenderingDone;
+
+    vkQueueSubmit(deviceManager->getCurrentDevice()->getQueues()[0][0], 1, &submitInfo, VK_NULL_HANDLE);
+
+    presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    presentInfo.pNext = nullptr;
+    presentInfo.waitSemaphoreCount = 1;
+    presentInfo.pWaitSemaphores = &semaphoreRenderingDone;
+    presentInfo.swapchainCount = 1;
+    presentInfo.pSwapchains = &swapchain;
+    presentInfo.pImageIndices = &imageIndex;
+    presentInfo.pResults = nullptr;
+
+
+    vkQueuePresentKHR(deviceManager->getCurrentDevice()->getQueues()[0][0], &presentInfo);
+}
+
 

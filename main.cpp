@@ -13,7 +13,7 @@ int main() {
     std::cout << "#> Setup finished!" << std::endl;
 #endif
 
-  while(app.run());
+  //while(app.run());
 
   app.shutdown();
 

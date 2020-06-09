@@ -82,6 +82,8 @@ void geo::Application::setup() {
 }
 
 void geo::Application::shutdown() {
+    deviceManager->waitForAllDevices();
+
     graphics->shutdown();
     graphics.reset();
 
@@ -107,6 +109,9 @@ bool geo::Application::run() {
             return false;
         }
     }
+
+    graphics->draw();
+
     return true;
 }
 

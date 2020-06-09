@@ -26,6 +26,8 @@ namespace geo {
         [[nodiscard]] sp<Device> getCurrentDevice() const;
         void setCurrentDevice(int index); // TODO: sp<Device> instead of index?
 
+        void waitForAllDevices() const;
+
     private:
         VkInstance instance;
 

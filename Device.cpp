@@ -137,5 +137,9 @@ sp<std::vector<VkQueueFamilyProperties>> geo::Device::getGraphicsQueueFamilies()
     return result;
 }
 
+const std::vector<std::vector<VkQueue>> &geo::Device::getQueues() const {
+    return queues;
+}
+
 
 

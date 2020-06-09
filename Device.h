@@ -22,6 +22,7 @@ namespace geo {
         [[nodiscard]] VkDevice getLogicalHandle() const;
         [[nodiscard]] std::vector<VkQueueFamilyProperties> getQueueFamilies() const;
         [[nodiscard]] sp<std::vector<VkQueueFamilyProperties>> getGraphicsQueueFamilies() const;
+        [[nodiscard]] const std::vector<std::vector<VkQueue>>& getQueues() const;
 
         void debugPrintDeviceProperty() const;
 

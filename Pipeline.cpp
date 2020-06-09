@@ -160,6 +160,15 @@ void geo::Pipeline::setup() {
     subpassDescription.preserveAttachmentCount = 0;
     subpassDescription.pPreserveAttachments = nullptr;
 
+    // I have absolutely no idea for what this is good for
+    subpassDependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+    subpassDependency.dstSubpass = 0;
+    subpassDependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    subpassDependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    subpassDependency.srcAccessMask = 0;
+    subpassDependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    subpassDependency.dependencyFlags = 0;
+
     renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassCreateInfo.pNext = nullptr;
     renderPassCreateInfo.flags = 0;
@@ -167,8 +176,8 @@ void geo::Pipeline::setup() {
     renderPassCreateInfo.pAttachments = &attachmentDescription;
     renderPassCreateInfo.subpassCount = 1;
     renderPassCreateInfo.pSubpasses = &subpassDescription;
-    renderPassCreateInfo.dependencyCount = 0;
-    renderPassCreateInfo.pDependencies = nullptr;
+    renderPassCreateInfo.dependencyCount = 1;
+    renderPassCreateInfo.pDependencies = &subpassDependency;
 
     vkCreateRenderPass(logicalHandle, &renderPassCreateInfo, nullptr, &renderPass);
     //End Attachments
@@ -213,4 +222,8 @@ void geo::Pipeline::shutdown() {
 
 const VkRenderPass &geo::Pipeline::getRenderPass() const {
     return renderPass;
+}
+
+const VkPipeline &geo::Pipeline::getVulkanPipeline() const {
+    return pipeline;
 }

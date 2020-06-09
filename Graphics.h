@@ -21,6 +21,8 @@ namespace geo {
         void setup() override;
         void shutdown() override;
 
+        void draw();
+
         void setDeviceManager(sp<DeviceManager> newDeviceManager);
 
     private:
@@ -31,6 +33,9 @@ namespace geo {
         std::vector<VkImageView> imageViews;
         std::vector<VkFramebufferCreateInfo> framebufferCreateInfos;
         std::vector<VkFramebuffer> framebuffer;
+        VkSemaphoreCreateInfo semaphoreCreateInfo;
+        VkSemaphore semaphoreImageAvailable, semaphoreRenderingDone;
+        VkPresentInfoKHR presentInfo;
 
         sp<DeviceManager> deviceManager;
         sp<Pipeline> pipeline;
