@@ -160,7 +160,18 @@ void geo::Pipeline::setup() {
     subpassDescription.preserveAttachmentCount = 0;
     subpassDescription.pPreserveAttachments = nullptr;
 
-    
+    renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassCreateInfo.pNext = nullptr;
+    renderPassCreateInfo.flags = 0;
+    renderPassCreateInfo.attachmentCount = 1;
+    renderPassCreateInfo.pAttachments = &attachmentDescription;
+    renderPassCreateInfo.subpassCount = 1;
+    renderPassCreateInfo.pSubpasses = &subpassDescription;
+    renderPassCreateInfo.dependencyCount = 0;
+    renderPassCreateInfo.pDependencies = nullptr;
+
+    vkCreateRenderPass(logicalHandle, &renderPassCreateInfo, nullptr, &renderPass);
+
 
 #ifdef GEO_STATUS_NOTIFICATIONS
     std::cout << "#> Pipeline ready!" << std::endl;
@@ -170,6 +181,7 @@ void geo::Pipeline::setup() {
 void geo::Pipeline::shutdown() {
     auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
 
+    vkDestroyRenderPass(logicalHandle, renderPass, nullptr);
     vkDestroyPipelineLayout(logicalHandle, layout, nullptr);
     vkDestroyShaderModule(logicalHandle, vertexModule, nullptr);
     vkDestroyShaderModule(logicalHandle, fragModule, nullptr);

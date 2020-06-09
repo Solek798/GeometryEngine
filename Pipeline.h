@@ -35,6 +35,8 @@ namespace geo {
         VkAttachmentDescription attachmentDescription;
         VkAttachmentReference attachmentReference;
         VkSubpassDescription subpassDescription;
+        VkRenderPassCreateInfo renderPassCreateInfo;
+        VkRenderPass renderPass;
 
         sp<DeviceManager> deviceManager;
     };
