@@ -32,10 +32,10 @@ void geo::Application::setup() {
 
     uint32_t amountOfLayers = 0;
     vkEnumerateInstanceLayerProperties(&amountOfLayers, nullptr);
-    std::vector<VkLayerProperties> layers(amountOfLayers);// = new VkLayerProperties[amountOfLayers];
+    std::vector<VkLayerProperties> layers(amountOfLayers);
     vkEnumerateInstanceLayerProperties(&amountOfLayers, layers.data());
 
-    const std::vector<const char*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
+
 
     uint32_t amountOfExtensions = 0;
     vkEnumerateInstanceExtensionProperties(nullptr, &amountOfExtensions, nullptr);
@@ -53,10 +53,16 @@ void geo::Application::setup() {
     instanceCreateInfo.pNext = nullptr;
     instanceCreateInfo.flags = 0;
     instanceCreateInfo.pApplicationInfo = &info;
-    instanceCreateInfo.enabledLayerCount = validationLayers.size();
-    instanceCreateInfo.ppEnabledLayerNames = validationLayers.data();
     instanceCreateInfo.enabledExtensionCount = amountOfSdlExtentions;
     instanceCreateInfo.ppEnabledExtensionNames = sdlExtentions.data();
+#ifdef GEO_DEBUG
+    const std::vector<const char*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
+    instanceCreateInfo.enabledLayerCount = validationLayers.size();
+    instanceCreateInfo.ppEnabledLayerNames = validationLayers.data();
+#else
+    instanceCreateInfo.enabledLayerCount = 0;
+    instanceCreateInfo.ppEnabledLayerNames = nullptr;
+#endif
 
     result = vkCreateInstance(&instanceCreateInfo, nullptr, &instance);
     VK_ASSERT(result);
