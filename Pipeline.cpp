@@ -171,7 +171,30 @@ void geo::Pipeline::setup() {
     renderPassCreateInfo.pDependencies = nullptr;
 
     vkCreateRenderPass(logicalHandle, &renderPassCreateInfo, nullptr, &renderPass);
+    //End Attachments
 
+    const std::vector<VkPipelineShaderStageCreateInfo> shaderStages{vertexStageCreateInfo, fragStageCreateInfo};
+
+    pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    pipelineCreateInfo.pNext = nullptr;
+    pipelineCreateInfo.flags = 0;
+    pipelineCreateInfo.stageCount = 2;
+    pipelineCreateInfo.pStages = shaderStages.data();
+    pipelineCreateInfo.pVertexInputState = &inputCreateInfo;
+    pipelineCreateInfo.pInputAssemblyState = &inputAssemblyCreateInfo;
+    pipelineCreateInfo.pTessellationState = nullptr;
+    pipelineCreateInfo.pViewportState = &viewportStateCreateInfo;
+    pipelineCreateInfo.pRasterizationState = &rasterizationStateCreateInfo;
+    pipelineCreateInfo.pMultisampleState = &multisampleStateCreateInfo;
+    pipelineCreateInfo.pDepthStencilState = nullptr;
+    pipelineCreateInfo.pColorBlendState = &colorBlendStateCreateInfo;
+    pipelineCreateInfo.pDynamicState = nullptr; // TODO: (?) set to enable Window resize
+    pipelineCreateInfo.layout = layout;
+    pipelineCreateInfo.renderPass = renderPass;
+    pipelineCreateInfo.subpass = 0;
+    pipelineCreateInfo.basePipelineHandle = VK_NULL_HANDLE;
+    pipelineCreateInfo.basePipelineIndex = 0;
+    vkCreateGraphicsPipelines(logicalHandle, VK_NULL_HANDLE, 1, &pipelineCreateInfo, nullptr, &pipeline);
 
 #ifdef GEO_STATUS_NOTIFICATIONS
     std::cout << "#> Pipeline ready!" << std::endl;
@@ -181,6 +204,7 @@ void geo::Pipeline::setup() {
 void geo::Pipeline::shutdown() {
     auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
 
+    vkDestroyPipeline(logicalHandle, pipeline, nullptr);
     vkDestroyRenderPass(logicalHandle, renderPass, nullptr);
     vkDestroyPipelineLayout(logicalHandle, layout, nullptr);
     vkDestroyShaderModule(logicalHandle, vertexModule, nullptr);

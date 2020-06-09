@@ -37,6 +37,8 @@ namespace geo {
         VkSubpassDescription subpassDescription;
         VkRenderPassCreateInfo renderPassCreateInfo;
         VkRenderPass renderPass;
+        VkGraphicsPipelineCreateInfo pipelineCreateInfo;
+        VkPipeline pipeline;
 
         sp<DeviceManager> deviceManager;
     };
