@@ -34,6 +34,7 @@ namespace geo {
         VkPipelineLayout layout;
         VkAttachmentDescription attachmentDescription;
         VkAttachmentReference attachmentReference;
+        VkSubpassDescription subpassDescription;
 
         sp<DeviceManager> deviceManager;
     };

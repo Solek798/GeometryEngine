@@ -149,6 +149,18 @@ void geo::Pipeline::setup() {
     attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     attachmentReference.attachment = 0;
 
+    subpassDescription.flags = 0;
+    subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpassDescription.inputAttachmentCount = 0;
+    subpassDescription.pInputAttachments = nullptr;
+    subpassDescription.colorAttachmentCount = 1;
+    subpassDescription.pColorAttachments = &attachmentReference;
+    subpassDescription.pResolveAttachments = nullptr;
+    subpassDescription.pDepthStencilAttachment = nullptr;
+    subpassDescription.preserveAttachmentCount = 0;
+    subpassDescription.pPreserveAttachments = nullptr;
+
+    
 
 #ifdef GEO_STATUS_NOTIFICATIONS
     std::cout << "#> Pipeline ready!" << std::endl;
