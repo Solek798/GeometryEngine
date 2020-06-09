@@ -146,10 +146,14 @@ void geo::Graphics::setup() {
         vkCreateFramebuffer(logicalHandle, &(framebufferCreateInfos[i]), nullptr, &(framebuffer[i]));
     }
 
+    command = std::make_shared<Command>(deviceManager);
+    command->setup();
 }
 
 void geo::Graphics::shutdown() {
     auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
+
+    command->shutdown();
 
     for (const auto& buffer : framebuffer) {
         vkDestroyFramebuffer(logicalHandle, buffer, nullptr);

@@ -125,5 +125,17 @@ std::vector<VkQueueFamilyProperties> geo::Device::getQueueFamilies() const {
     return queueFamilyProperties;
 }
 
+sp<std::vector<VkQueueFamilyProperties>> geo::Device::getGraphicsQueueFamilies() const {
+    auto result = std::make_shared<std::vector<VkQueueFamilyProperties>>();
+
+    for (const auto& property : queueFamilyProperties) {
+        if ((property.queueFlags & VK_QUEUE_GRAPHICS_BIT) != 0) {
+            result->emplace_back(property);
+        }
+    }
+
+    return result;
+}
+
 
 

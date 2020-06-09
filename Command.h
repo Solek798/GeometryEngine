@@ -7,18 +7,22 @@
 
 
 #include "Manageable.h"
+#include "DeviceManager.h"
 
 namespace geo {
     class Command : public Manageable {
     public:
-        Command();
+        explicit Command(sp<DeviceManager> deviceManager);
         virtual ~Command() = default;
 
         void setup() override;
         void shutdown() override;
 
     private:
+        VkCommandPoolCreateInfo poolCreateInfo;
+        VkCommandPool commandPool;
 
+        sp<DeviceManager> deviceManager;
     };
 }
 

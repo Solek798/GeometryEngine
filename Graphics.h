@@ -9,6 +9,7 @@
 #include "Device.h"
 #include "DeviceManager.h"
 #include "Pipeline.h"
+#include "Command.h"
 
 namespace geo {
     class Graphics : public Manageable {
@@ -33,6 +34,7 @@ namespace geo {
 
         sp<DeviceManager> deviceManager;
         sp<Pipeline> pipeline;
+        sp<Command> command;
     };
 }
 
