@@ -28,6 +28,8 @@ namespace geo {
         VkSwapchainCreateInfoKHR swapchainCreateInfo;
         VkSwapchainKHR swapchain;
         std::vector<VkImageView> imageViews;
+        std::vector<VkFramebufferCreateInfo> framebufferCreateInfos;
+        std::vector<VkFramebuffer> framebuffer;
 
         sp<DeviceManager> deviceManager;
         sp<Pipeline> pipeline;

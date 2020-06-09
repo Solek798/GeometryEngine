@@ -17,6 +17,8 @@ namespace geo {
         void setup() override;
         void shutdown() override;
 
+        [[nodiscard]] const VkRenderPass& getRenderPass() const;
+
     private:
         VkShaderModuleCreateInfo vertexModuleCreateInfo, fragModuleCreateInfo;
         VkShaderModule fragModule, vertexModule;

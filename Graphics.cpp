@@ -129,10 +129,31 @@ void geo::Graphics::setup() {
 
     pipeline = std::make_shared<Pipeline>(deviceManager);
     pipeline->setup();
+
+    framebufferCreateInfos.resize(imageViews.size());
+    framebuffer.resize(framebufferCreateInfos.size());
+    for (int i=0 ; i<framebufferCreateInfos.size() ; i++) {
+        framebufferCreateInfos[i].sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        framebufferCreateInfos[i].pNext = nullptr;
+        framebufferCreateInfos[i].flags = 0;
+        framebufferCreateInfos[i].renderPass = pipeline->getRenderPass();
+        framebufferCreateInfos[i].attachmentCount = 1;
+        framebufferCreateInfos[i].pAttachments = &(imageViews[i]);
+        framebufferCreateInfos[i].width = WINDOW_WIDTH;
+        framebufferCreateInfos[i].height = WINDOW_HEIGHT;
+        framebufferCreateInfos[i].layers = 1;
+
+        vkCreateFramebuffer(logicalHandle, &(framebufferCreateInfos[i]), nullptr, &(framebuffer[i]));
+    }
+
 }
 
 void geo::Graphics::shutdown() {
     auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
+
+    for (const auto& buffer : framebuffer) {
+        vkDestroyFramebuffer(logicalHandle, buffer, nullptr);
+    }
 
     pipeline->shutdown();
 

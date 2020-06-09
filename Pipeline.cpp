@@ -210,3 +210,7 @@ void geo::Pipeline::shutdown() {
     vkDestroyShaderModule(logicalHandle, vertexModule, nullptr);
     vkDestroyShaderModule(logicalHandle, fragModule, nullptr);
 }
+
+const VkRenderPass &geo::Pipeline::getRenderPass() const {
+    return renderPass;
+}
