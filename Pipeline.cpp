@@ -214,7 +214,3 @@ void geo::Pipeline::shutdown() {
 const VkRenderPass &geo::Pipeline::getRenderPass() const {
     return renderPass;
 }
-
-const VkPipeline &geo::Pipeline::getVulkanPipeline() const {
-    return pipeline;
-}

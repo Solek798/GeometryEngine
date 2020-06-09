@@ -8,30 +8,21 @@
 
 #include "Manageable.h"
 #include "DeviceManager.h"
-#include "Pipeline.h"
 
 namespace geo {
     class Command : public Manageable {
     public:
-        Command(sp<DeviceManager> deviceManager, sp<Pipeline> pipeline, std::vector<VkFramebuffer>& frameBuffer);
+        explicit Command(sp<DeviceManager> deviceManager);
         virtual ~Command() = default;
 
         void setup() override;
         void shutdown() override;
 
-        void record();
-
     private:
         VkCommandPoolCreateInfo poolCreateInfo;
         VkCommandPool commandPool;
-        VkCommandBufferAllocateInfo allocateInfo;
-        std::vector<VkCommandBuffer> commandBuffers;
-        VkCommandBufferBeginInfo beginInfo;
-        VkRenderPassBeginInfo passBeginInfo;
 
         sp<DeviceManager> deviceManager;
-        sp<Pipeline> pipeline;
-        std::vector<VkFramebuffer>& frameBuffer;
     };
 }
 

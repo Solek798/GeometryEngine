@@ -146,7 +146,7 @@ void geo::Graphics::setup() {
         vkCreateFramebuffer(logicalHandle, &(framebufferCreateInfos[i]), nullptr, &(framebuffer[i]));
     }
 
-    command = std::make_shared<Command>(deviceManager, pipeline, framebuffer);
+    command = std::make_shared<Command>(deviceManager);
     command->setup();
 }
 
@@ -171,5 +171,4 @@ void geo::Graphics::shutdown() {
 void geo::Graphics::setDeviceManager(sp<geo::DeviceManager> newDeviceManager) {
     deviceManager = std::move(newDeviceManager);
 }
-
 
