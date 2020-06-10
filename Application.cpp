@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Application.h"
 #include "GlobaleScope.h"
+#include <chrono>
 
 geo::Application::Application() {
     window = nullptr;
@@ -104,13 +105,19 @@ bool geo::Application::run() {
 
     SDL_Event event;
 
+    SDL_Delay(200);
+
     while(SDL_PollEvent(&event)) {
         if (event.type == SDL_EventType::SDL_QUIT) {
             return false;
         }
     }
-
+    auto start = std::chrono::high_resolution_clock::now();
     graphics->draw();
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "FPS: " << 1000000.0 / duration.count() << std::endl;
 
     return true;
 }

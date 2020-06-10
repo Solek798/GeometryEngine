@@ -3,7 +3,7 @@ project(GeometryEngine)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_compile_definitions(GEO_DEBUG)
+#add_compile_definitions(GEO_DEBUG)
 #add_compile_definitions(GEO_DEBUG_STATS)
 add_compile_definitions(GEO_STATUS_NOTIFICATIONS)
 

@@ -96,31 +96,32 @@ void geo::Graphics::setup() {
 
     uint32_t amountOfImages = 0;
     vkGetSwapchainImagesKHR(logicalHandle, swapchain, &amountOfImages, nullptr);
-    std::vector<VkImage> images{amountOfImages};
+    images.resize(amountOfImages);
     vkGetSwapchainImagesKHR(logicalHandle, swapchain, &amountOfImages, images.data());
 
-    VkImageViewCreateInfo imageViewCreateInfo;
-    imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    imageViewCreateInfo.pNext = nullptr;
-    imageViewCreateInfo.flags = 0;
-    imageViewCreateInfo.image = VK_NULL_HANDLE;
-    imageViewCreateInfo.viewType = VkImageViewType::VK_IMAGE_VIEW_TYPE_2D;
-    imageViewCreateInfo.format = swapchainCreateInfo.imageFormat;
-    imageViewCreateInfo.components = VkComponentMapping{VK_COMPONENT_SWIZZLE_IDENTITY,
-                                                        VK_COMPONENT_SWIZZLE_IDENTITY,
-                                                        VK_COMPONENT_SWIZZLE_IDENTITY,
-                                                        VK_COMPONENT_SWIZZLE_IDENTITY};
-    imageViewCreateInfo.subresourceRange = VkImageSubresourceRange{VK_IMAGE_ASPECT_COLOR_BIT,
-                                                                   0,
-                                                                   1,
-                                                                   0,
-                                                                   1};
 
     imageViews.resize(images.size());
+    imageViewCreateInfos.resize(images.size());
 
     for (int i=0 ; i<images.size() ; i++) {
-        imageViewCreateInfo.image = images[i];
-        vkCreateImageView(logicalHandle, &imageViewCreateInfo, nullptr, &imageViews[i]);
+        imageViewCreateInfos[i].sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        imageViewCreateInfos[i].pNext = nullptr;
+        imageViewCreateInfos[i].flags = 0;
+        imageViewCreateInfos[i].image = VK_NULL_HANDLE;
+        imageViewCreateInfos[i].viewType = VkImageViewType::VK_IMAGE_VIEW_TYPE_2D;
+        imageViewCreateInfos[i].format = swapchainCreateInfo.imageFormat;
+        imageViewCreateInfos[i].image = images[i];
+        imageViewCreateInfos[i].components = VkComponentMapping{VK_COMPONENT_SWIZZLE_IDENTITY,
+                                                               VK_COMPONENT_SWIZZLE_IDENTITY,
+                                                               VK_COMPONENT_SWIZZLE_IDENTITY,
+                                                               VK_COMPONENT_SWIZZLE_IDENTITY};
+        imageViewCreateInfos[i].subresourceRange = VkImageSubresourceRange{VK_IMAGE_ASPECT_COLOR_BIT,
+                                                                       0,
+                                                                       1,
+                                                                       0,
+                                                                       1};
+
+        vkCreateImageView(logicalHandle, &(imageViewCreateInfos[i]), nullptr, &imageViews[i]);
     }
 
 #ifdef GEO_STATUS_NOTIFICATIONS

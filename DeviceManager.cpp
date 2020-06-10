@@ -6,7 +6,9 @@
 #include <iostream>
 #include "DeviceManager.h"
 
-geo::DeviceManager::DeviceManager(VkInstance& instance) : instance(instance) { }
+geo::DeviceManager::DeviceManager(VkInstance& instance)
+    : instance(instance)
+    , currentDeviceIndex(0) { }
 
 void geo::DeviceManager::setup() {
     uint32_t deviceCount = 0;

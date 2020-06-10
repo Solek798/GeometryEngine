@@ -20,7 +20,7 @@ namespace geo {
         [[nodiscard]] const VkRenderPass& getRenderPass() const;
         [[nodiscard]] const VkPipeline& getVulkanPipeline() const;
 
-
+        operator VkPipeline() const;
     private:
         VkShaderModuleCreateInfo vertexModuleCreateInfo, fragModuleCreateInfo;
         VkShaderModule fragModule, vertexModule;

@@ -227,3 +227,7 @@ const VkRenderPass &geo::Pipeline::getRenderPass() const {
 const VkPipeline &geo::Pipeline::getVulkanPipeline() const {
     return pipeline;
 }
+
+geo::Pipeline::operator VkPipeline() const {
+    return pipeline;
+}

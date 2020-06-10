@@ -30,6 +30,8 @@ namespace geo {
         VkSurfaceKHR surface;
         VkSwapchainCreateInfoKHR swapchainCreateInfo;
         VkSwapchainKHR swapchain;
+        std::vector<VkImage> images;
+        std::vector<VkImageViewCreateInfo> imageViewCreateInfos;
         std::vector<VkImageView> imageViews;
         std::vector<VkFramebufferCreateInfo> framebufferCreateInfos;
         std::vector<VkFramebuffer> framebuffer;
