@@ -21,7 +21,7 @@ namespace geo {
 
         void record();
 
-        const std::vector<VkCommandBuffer>& getCommandBuffers() const;
+        [[nodiscard]] const std::vector<VkCommandBuffer>& getCommandBuffers() const;
 
     private:
         VkCommandPoolCreateInfo poolCreateInfo;

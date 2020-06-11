@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Pipeline.h"
 #include "IO/FileInput.h"
+#include "Vertex.h"
 
 
 geo::Pipeline::Pipeline(sp<DeviceManager> deviceManager) : deviceManager(std::move(deviceManager)) {
@@ -49,13 +50,16 @@ void geo::Pipeline::setup() {
     fragStageCreateInfo.module = fragModule;
     fragStageCreateInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 
+    auto tempVertexBindingDescriptions = Vertex::getInputBindingDescription();
+    auto tempVertexAttributeDescriptions = Vertex::getInputAttributeDescription();
+
     inputCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     inputCreateInfo.pNext = nullptr;
     inputCreateInfo.flags = 0;
-    inputCreateInfo.vertexBindingDescriptionCount = 0; // TODO does not work in real Application!
-    inputCreateInfo.pVertexBindingDescriptions = nullptr; // TODO does not work in real Application!
-    inputCreateInfo.vertexAttributeDescriptionCount = 0; // TODO does not work in real Application!
-    inputCreateInfo.pVertexAttributeDescriptions = nullptr; // TODO does not work in real Application!
+    inputCreateInfo.vertexBindingDescriptionCount = 1;
+    inputCreateInfo.pVertexBindingDescriptions = &tempVertexBindingDescriptions;
+    inputCreateInfo.vertexAttributeDescriptionCount = 1;
+    inputCreateInfo.pVertexAttributeDescriptions = &tempVertexAttributeDescriptions;
 
     inputAssemblyCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     inputAssemblyCreateInfo.pNext = nullptr;

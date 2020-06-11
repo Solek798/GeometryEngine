@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Application.h"
+#include "glm/glm.hpp"
 
 int main() {
   geo::Application app;
