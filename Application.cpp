@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Application.h"
 #include "GlobaleScope.h"
+#include <chrono>
 
 geo::Application::Application() {
     window = nullptr;
@@ -14,7 +15,7 @@ void geo::Application::setup() {
     VkResult result;
 
     SDL_Init(SDL_INIT_EVERYTHING);
-    window = SDL_CreateWindow("Geometry Engine", 100, 100, 600, 400, SDL_WINDOW_VULKAN);
+    window = SDL_CreateWindow("Geometry Engine", 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_VULKAN);
 
     uint32_t amountOfSdlExtentions = 0;
 
@@ -32,45 +33,64 @@ void geo::Application::setup() {
 
     uint32_t amountOfLayers = 0;
     vkEnumerateInstanceLayerProperties(&amountOfLayers, nullptr);
-    std::vector<VkLayerProperties> layers(amountOfLayers);// = new VkLayerProperties[amountOfLayers];
+    std::vector<VkLayerProperties> layers(amountOfLayers);
     vkEnumerateInstanceLayerProperties(&amountOfLayers, layers.data());
 
-    const std::vector<const char*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
+
 
     uint32_t amountOfExtensions = 0;
     vkEnumerateInstanceExtensionProperties(nullptr, &amountOfExtensions, nullptr);
     std::vector<VkExtensionProperties> extensions(amountOfExtensions);
     vkEnumerateInstanceExtensionProperties(nullptr, &amountOfExtensions, extensions.data());
 
+#ifdef GEO_DEBUG_STATS
     std::cout << "Amount of Extensions: " << amountOfExtensions << std::endl;
     for (const auto& ext : extensions) {
         std::cout << ext.extensionName << std::endl;
     }
+#endif
 
     instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceCreateInfo.pNext = nullptr;
     instanceCreateInfo.flags = 0;
     instanceCreateInfo.pApplicationInfo = &info;
-    instanceCreateInfo.enabledLayerCount = validationLayers.size();
-    instanceCreateInfo.ppEnabledLayerNames = validationLayers.data();
     instanceCreateInfo.enabledExtensionCount = amountOfSdlExtentions;
     instanceCreateInfo.ppEnabledExtensionNames = sdlExtentions.data();
+#ifdef GEO_DEBUG
+    const std::vector<const char*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
+    instanceCreateInfo.enabledLayerCount = validationLayers.size();
+    instanceCreateInfo.ppEnabledLayerNames = validationLayers.data();
+#else
+    instanceCreateInfo.enabledLayerCount = 0;
+    instanceCreateInfo.ppEnabledLayerNames = nullptr;
+#endif
 
     result = vkCreateInstance(&instanceCreateInfo, nullptr, &instance);
     VK_ASSERT(result);
 
+    VkSurfaceKHR surface;
     SDL_Vulkan_CreateSurface(window, instance, &surface);
 
-    deviceManager = std::make_unique<DeviceManager>(instance);
+#ifdef GEO_STATUS_NOTIFICATIONS
+    std::cout << "#> Application ready!" << std::endl;
+#endif
+
+    deviceManager = std::make_shared<DeviceManager>(instance);
     deviceManager->setup();
 
+    graphics = std::make_shared<Graphics>(instance, surface, deviceManager);
+    graphics->setup();
 }
 
 void geo::Application::shutdown() {
+    deviceManager->waitForAllDevices();
+
+    graphics->shutdown();
+    graphics.reset();
+
     deviceManager->shutdown();
     deviceManager.reset();
 
-    vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyInstance(instance, nullptr);
 
     SDL_DestroyWindow(window);
@@ -85,11 +105,20 @@ bool geo::Application::run() {
 
     SDL_Event event;
 
+    SDL_Delay(200);
+
     while(SDL_PollEvent(&event)) {
         if (event.type == SDL_EventType::SDL_QUIT) {
             return false;
         }
     }
+    auto start = std::chrono::high_resolution_clock::now();
+    graphics->draw();
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "FPS: " << 1000000.0 / duration.count() << std::endl;
+
     return true;
 }
 

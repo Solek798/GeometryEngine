@@ -11,6 +11,7 @@
 #include "Manageable.h"
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_vulkan.h"
+#include "Graphics.h"
 
 namespace geo {
     class Application : Manageable {
@@ -29,11 +30,12 @@ namespace geo {
         VkApplicationInfo info;
         VkInstanceCreateInfo instanceCreateInfo;
         VkInstance instance;
-        VkSurfaceKHR surface;
+
 
         SDL_Window* window;
 
-        up<DeviceManager> deviceManager;
+        sp<DeviceManager> deviceManager;
+        sp<Graphics> graphics;
     };
 }
 

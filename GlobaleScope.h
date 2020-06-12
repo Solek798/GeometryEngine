@@ -18,5 +18,14 @@ if (result != VK_SUCCESS) { \
 
 template <typename T> using sp = std::shared_ptr<T>;
 template <typename T> using up = std::unique_ptr<T>;
+template <typename T> using wp = std::weak_ptr<T>;
+
+#define WINDOW_WIDTH 600
+#define WINDOW_HEIGHT 400
+
+#define COMPILED_VERT "../shader/vert.spv"
+#define COMPILED_FRAG "../shader/frag.spv"
+
+#define SHADER_START_METHOD "main"
 
 #endif //GEOMETRYENGINE_GLOBALESCOPE_H

@@ -22,9 +22,17 @@ namespace geo {
 
         [[nodiscard]] int getDeviceCount() const;
         [[nodiscard]] sp<Device> getDevice(int index) const;
+
+        [[nodiscard]] sp<Device> getCurrentDevice() const;
+        void setCurrentDevice(int index); // TODO: sp<Device> instead of index?
+
+        void waitForAllDevices() const;
+
     private:
         VkInstance instance;
+
         std::vector<sp<Device>> devices;
+        int currentDeviceIndex;
     };
 }
 
