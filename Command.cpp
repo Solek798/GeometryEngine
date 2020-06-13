@@ -3,8 +3,10 @@
 //
 
 #include "Command.h"
+#include "Vertex.h"
 
 #include <utility>
+#include <cstring>
 
 geo::Command::Command(sp<DeviceManager> deviceManager, sp<Pipeline> pipeline, std::vector<VkFramebuffer>& frameBuffer)
     : deviceManager(std::move(deviceManager))
@@ -36,12 +38,37 @@ void geo::Command::setup() {
     beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
     beginInfo.pInheritanceInfo = nullptr;
 
-    record();
+    bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufferCreateInfo.pNext = nullptr;
+    bufferCreateInfo.flags = 0;
+    bufferCreateInfo.size = sizeof(Vertex) * MAX_VERTEX_COUNT;
+    bufferCreateInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    bufferCreateInfo.queueFamilyIndexCount = 0;
+    bufferCreateInfo.pQueueFamilyIndices = nullptr;
+    vkCreateBuffer(logicalHandle, &bufferCreateInfo, nullptr, &vertexBuffer);
+
+    vkGetBufferMemoryRequirements(logicalHandle, vertexBuffer, &memoryRequirements);
+
+    memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memoryAllocateInfo.pNext = nullptr;
+    memoryAllocateInfo.allocationSize = memoryRequirements.size;
+    memoryAllocateInfo.memoryTypeIndex = deviceManager->getCurrentDevice()->findMemoryTypeIndex(
+            memoryRequirements.memoryTypeBits,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+    vkAllocateMemory(logicalHandle, &memoryAllocateInfo, nullptr, &memory);
+
+    vkBindBufferMemory(logicalHandle, vertexBuffer, memory, 0);
+
+    //record();
 }
 
 void geo::Command::shutdown() {
     auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
 
+    vkFreeMemory(logicalHandle, memory, nullptr);
+    vkDestroyBuffer(logicalHandle, vertexBuffer, nullptr);
     vkFreeCommandBuffers(logicalHandle, commandPool, frameBuffer.size(), commandBuffers.data());
     vkDestroyCommandPool(logicalHandle, commandPool, nullptr);
 }
@@ -62,6 +89,8 @@ void geo::Command::record() {
         vkCmdBeginRenderPass(commandBuffers[i], &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getVulkanPipeline());
+        VkDeviceSize offsets[] {0};
+        vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, offsets);
         vkCmdDraw(commandBuffers[i], 3, 1, 0, 0); // TODO: Hardcoded vertex Count
 
 
@@ -72,4 +101,15 @@ void geo::Command::record() {
 
 const std::vector<VkCommandBuffer> &geo::Command::getCommandBuffers() const {
     return commandBuffers;
+}
+
+void geo::Command::mapMemory(const std::vector<Vertex>& vertecies) {
+    auto logicalHandle = deviceManager->getCurrentDevice()->getLogicalHandle();
+
+    void* data = nullptr;
+    vkMapMemory(logicalHandle, memory, 0, bufferCreateInfo.size, 0, &data);
+
+    memcpy(data, (void*)vertecies.data(), bufferCreateInfo.size);
+
+    vkUnmapMemory(logicalHandle, memory);
 }

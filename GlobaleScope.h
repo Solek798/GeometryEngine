@@ -28,4 +28,6 @@ template <typename T> using wp = std::weak_ptr<T>;
 
 #define SHADER_START_METHOD "main"
 
+#define MAX_VERTEX_COUNT 1000
+
 #endif //GEOMETRYENGINE_GLOBALESCOPE_H

@@ -12,13 +12,23 @@ geo::Graphics::Graphics(VkInstance instance, VkSurfaceKHR surface)
     : instance(instance)
     , surface(surface)
     , deviceManager(nullptr)
-    , pipeline(nullptr) { }
+    , pipeline(nullptr) {
+
+    vertecies.emplace_back(-0.5f, -0.5f);
+    vertecies.emplace_back(-0.5f, 0.5f);
+    vertecies.emplace_back(0.5f, -0.5f);
+}
 
 geo::Graphics::Graphics(VkInstance instance, VkSurfaceKHR surface, sp<DeviceManager> deviceManager)
     : instance(instance)
     , surface(surface)
     , deviceManager(std::move(deviceManager))
-    , pipeline(nullptr) { }
+    , pipeline(nullptr) {
+
+    vertecies.emplace_back(-0.5f, 0.5f);
+    vertecies.emplace_back(-0.5f, -0.5f);
+    vertecies.emplace_back(0.5f, 0.5f);
+}
 
 void geo::Graphics::setup() {
     auto physicalHandle = deviceManager->getCurrentDevice()->getPhysicalHandle();
@@ -149,6 +159,8 @@ void geo::Graphics::setup() {
 
     command = std::make_shared<Command>(deviceManager, pipeline, framebuffer);
     command->setup();
+    command->record();
+    command->mapMemory(vertecies);
 
     semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
     semaphoreCreateInfo.pNext = nullptr;

@@ -141,5 +141,19 @@ const std::vector<std::vector<VkQueue>> &geo::Device::getQueues() const {
     return queues;
 }
 
+uint32_t geo::Device::findMemoryTypeIndex(uint32_t typeFilter, VkMemoryPropertyFlags properties) const {
+    VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(physicalHandle, &physicalDeviceMemoryProperties);
+
+    for (uint32_t i = 0 ; i < physicalDeviceMemoryProperties.memoryTypeCount ; i++) {
+        if (typeFilter & (1 << i) && (physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & properties) == properties) {
+            return i;
+        }
+    }
+
+    // TODO: insert valid Exception
+    return -1;
+}
+
 
 

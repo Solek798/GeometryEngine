@@ -42,6 +42,7 @@ namespace geo {
         sp<DeviceManager> deviceManager;
         sp<Pipeline> pipeline;
         sp<Command> command;
+        std::vector<Vertex> vertecies;
     };
 }
 

@@ -26,6 +26,8 @@ namespace geo {
 
         void debugPrintDeviceProperty() const;
 
+        [[nodiscard]] uint32_t findMemoryTypeIndex(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
+
     private:
         VkDevice logicalHandle;
         VkPhysicalDevice physicalHandle;

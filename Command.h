@@ -9,6 +9,7 @@
 #include "Manageable.h"
 #include "DeviceManager.h"
 #include "Pipeline.h"
+#include "Vertex.h"
 
 namespace geo {
     class Command : public Manageable {
@@ -20,6 +21,7 @@ namespace geo {
         void shutdown() override;
 
         void record();
+        void mapMemory(const std::vector<Vertex>& vertecies);
 
         [[nodiscard]] const std::vector<VkCommandBuffer>& getCommandBuffers() const;
 
@@ -30,6 +32,11 @@ namespace geo {
         std::vector<VkCommandBuffer> commandBuffers;
         VkCommandBufferBeginInfo beginInfo;
         VkRenderPassBeginInfo passBeginInfo;
+        VkBufferCreateInfo bufferCreateInfo;
+        VkBuffer vertexBuffer;
+        VkMemoryRequirements memoryRequirements;
+        VkMemoryAllocateInfo memoryAllocateInfo;
+        VkDeviceMemory memory;
 
         sp<DeviceManager> deviceManager;
         sp<Pipeline> pipeline;
