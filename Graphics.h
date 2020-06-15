@@ -10,6 +10,7 @@
 #include "DeviceManager.h"
 #include "Pipeline.h"
 #include "Command.h"
+#include "Image.h"
 
 namespace geo {
     class Graphics : public Manageable {
@@ -38,6 +39,21 @@ namespace geo {
         VkSemaphoreCreateInfo semaphoreCreateInfo;
         VkSemaphore semaphoreImageAvailable, semaphoreRenderingDone;
         VkPresentInfoKHR presentInfo;
+
+        VkDescriptorSetLayout descriptorSetLayout;
+        VkDescriptorPool descriptorPool;
+        VkDescriptorSet descriptorSet;
+        VkDescriptorSetLayoutBinding descriptorSetLayoutBinding;
+        VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo;
+        VkBuffer uniformBuffer;
+        VkBufferCreateInfo uniformBufferCreateInfo;
+        sp<Image> testImage;
+        VkDescriptorPoolSize descriptorPoolSize;
+        VkDescriptorPoolCreateInfo descriptorPoolCreateInfo;
+        VkDescriptorSetAllocateInfo descriptorSetAllocateInfo;
+        VkDescriptorImageInfo descriptorImageInfo;
+        VkWriteDescriptorSet writeDescriptorSet;
+
 
         sp<DeviceManager> deviceManager;
         sp<Pipeline> pipeline;

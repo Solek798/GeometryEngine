@@ -6,9 +6,13 @@
 
 geo::Vertex::Vertex() : position(0, 0) { }
 
-geo::Vertex::Vertex(glm::vec2 position) : position(position) { }
+geo::Vertex::Vertex(glm::vec2 position, glm::vec2 uv)
+    : position(position)
+    , uv(uv) { }
 
-geo::Vertex::Vertex(float x, float y) : position(x, y) { }
+geo::Vertex::Vertex(float x, float y, float u, float v)
+    : position(x, y)
+    , uv(u, v) { }
 
 VkVertexInputBindingDescription geo::Vertex::getInputBindingDescription() {
     VkVertexInputBindingDescription inputBindingDescription;
@@ -19,12 +23,18 @@ VkVertexInputBindingDescription geo::Vertex::getInputBindingDescription() {
     return inputBindingDescription;
 }
 
-VkVertexInputAttributeDescription geo::Vertex::getInputAttributeDescription() {
-    VkVertexInputAttributeDescription inputAttributeDescription;
-    inputAttributeDescription.location = 0;
-    inputAttributeDescription.binding = 0;
-    inputAttributeDescription.format = VK_FORMAT_R32G32_SFLOAT;
-    inputAttributeDescription.offset = offsetof(Vertex, position);
+const sp<std::vector<VkVertexInputAttributeDescription>> geo::Vertex::getInputAttributeDescription() {
+    auto descriptions = std::make_shared<std::vector<VkVertexInputAttributeDescription>>(2);
 
-    return inputAttributeDescription;
+    descriptions->at(0).location = 0;
+    descriptions->at(0).binding = 0;
+    descriptions->at(0).format = VK_FORMAT_R32G32_SFLOAT;
+    descriptions->at(0).offset = offsetof(Vertex, position);
+
+    descriptions->at(1).location = 1;
+    descriptions->at(1).binding = 0;
+    descriptions->at(1).format = VK_FORMAT_R32G32_SFLOAT;
+    descriptions->at(1).offset = offsetof(Vertex, uv);
+
+    return descriptions;
 }

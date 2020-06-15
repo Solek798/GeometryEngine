@@ -24,6 +24,7 @@ namespace geo {
         void mapMemory(const std::vector<Vertex>& vertecies);
 
         [[nodiscard]] const std::vector<VkCommandBuffer>& getCommandBuffers() const;
+        [[nodiscard]] const VkCommandPool& getCommandPool() const;
 
     private:
         VkCommandPoolCreateInfo poolCreateInfo;

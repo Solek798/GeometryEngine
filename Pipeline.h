@@ -11,7 +11,7 @@
 namespace geo {
     class Pipeline : public Manageable {
     public:
-        explicit Pipeline(sp<DeviceManager> deviceManager);
+        Pipeline(sp<DeviceManager> deviceManager, VkDescriptorSetLayout* descriptorSetLayout);
         virtual ~Pipeline() = default;
 
         void setup() override;
@@ -46,6 +46,7 @@ namespace geo {
         VkPipeline pipeline;
 
         sp<DeviceManager> deviceManager;
+        VkDescriptorSetLayout* descriptorSetLayout;
     };
 }
 

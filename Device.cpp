@@ -29,6 +29,7 @@ void geo::Device::setup() {
     }
 
     VkPhysicalDeviceFeatures usedFeatures{};
+    usedFeatures.samplerAnisotropy = VK_TRUE;
 
     // TODO: BAD INIT
     const std::vector<const char*> deviceExtentions {
@@ -83,7 +84,6 @@ void geo::Device::debugPrintDeviceProperty() const {
         case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU: std::cout << "Device Type: " << "VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU" << std::endl; break;
         case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU: std::cout << "Device Type: " << "VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU" << std::endl; break;
         case VK_PHYSICAL_DEVICE_TYPE_CPU: std::cout << "Device Type: " << "VK_PHYSICAL_DEVICE_TYPE_CPU" << std::endl; break;
-        case VK_PHYSICAL_DEVICE_TYPE_RANGE_SIZE: std::cout << "Device Type: " << "VK_PHYSICAL_DEVICE_TYPE_RANGE_SIZE" << std::endl; break;
         case VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM: std::cout << "Device Type: " << "VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM" << std::endl; break;
     }
     std::cout << "Vendor ID: " << properties.vendorID << std::endl;

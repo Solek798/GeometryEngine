@@ -1,15 +1,14 @@
 //
 // Created by felix on 08.06.20.
 //
-
+#include "Pipeline.h"
 #include <utility>
 #include <iostream>
-#include "Pipeline.h"
 #include "IO/FileInput.h"
 #include "Vertex.h"
 
 
-geo::Pipeline::Pipeline(sp<DeviceManager> deviceManager) : deviceManager(std::move(deviceManager)) {
+geo::Pipeline::Pipeline(sp<DeviceManager> deviceManager, VkDescriptorSetLayout* descriptorSetLayout) : deviceManager(std::move(deviceManager)), descriptorSetLayout(descriptorSetLayout) {
 
 }
 
@@ -58,8 +57,8 @@ void geo::Pipeline::setup() {
     inputCreateInfo.flags = 0;
     inputCreateInfo.vertexBindingDescriptionCount = 1;
     inputCreateInfo.pVertexBindingDescriptions = &tempVertexBindingDescriptions;
-    inputCreateInfo.vertexAttributeDescriptionCount = 1;
-    inputCreateInfo.pVertexAttributeDescriptions = &tempVertexAttributeDescriptions;
+    inputCreateInfo.vertexAttributeDescriptionCount = 2;
+    inputCreateInfo.pVertexAttributeDescriptions = tempVertexAttributeDescriptions->data();
 
     inputAssemblyCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     inputAssemblyCreateInfo.pNext = nullptr;
@@ -133,10 +132,10 @@ void geo::Pipeline::setup() {
     layoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     layoutCreateInfo.pNext = nullptr;
     layoutCreateInfo.flags = 0;
-    layoutCreateInfo.setLayoutCount = 0; // TODO: enable to be able to use uniforms in shader
-    layoutCreateInfo.pSetLayouts = nullptr; // TODO: enable to be able to use uniforms in shader
-    layoutCreateInfo.pushConstantRangeCount = 0; // TODO: enable to be able to use uniforms in shader
-    layoutCreateInfo.pPushConstantRanges = nullptr; // TODO: enable to be able to use uniforms in shader
+    layoutCreateInfo.setLayoutCount = 1;
+    layoutCreateInfo.pSetLayouts = descriptorSetLayout;
+    layoutCreateInfo.pushConstantRangeCount = 0;
+    layoutCreateInfo.pPushConstantRanges = nullptr;
     vkCreatePipelineLayout(logicalHandle, &layoutCreateInfo, nullptr, &layout);
 
     // Start Attachments

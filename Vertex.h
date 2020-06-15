@@ -5,24 +5,27 @@
 #ifndef GEOMETRYENGINE_VERTEX_H
 #define GEOMETRYENGINE_VERTEX_H
 
+#include "GlobaleScope.h"
 #include <glm/vec2.hpp>
 #include <vulkan/vulkan_core.h>
+#include <vector>
 
 namespace geo {
     class Vertex {
     public:
         static VkVertexInputBindingDescription getInputBindingDescription();
-        static VkVertexInputAttributeDescription getInputAttributeDescription();
+        static const sp<std::vector<VkVertexInputAttributeDescription>> getInputAttributeDescription();
 
         Vertex();
-        explicit Vertex(glm::vec2 position);
-        Vertex(float x, float y);
+        Vertex(glm::vec2 position, glm::vec2 uv);
+        Vertex(float x, float y, float u, float v);
         virtual ~Vertex() = default;
 
 
 
     private:
         glm::vec2 position;
+        glm::vec2 uv;
     };
 }
 

@@ -1,8 +1,16 @@
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
+
+#undef STB_IMAGE_IMPLEMENTATION
 #include <iostream>
 #include "Application.h"
-#include "glm/glm.hpp"
+#include <vector>
+
+#include <memory>
 
 int main() {
+    //std::shared_ptr<std::vector<int>> test = std::make_shared<std::vector<int>>(1);
+
   geo::Application app;
 
   app.setup();
@@ -18,6 +26,11 @@ int main() {
 
   app.shutdown();
 
+
   std::cout << "Hello, World!" << std::endl;
+
+    //geo::Image image{"../resources/rocket.png"};*/
+
+
   return 0;
 }

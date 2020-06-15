@@ -7,6 +7,7 @@
 #include "IO/FileInput.h"
 #include <utility>
 #include <iostream>
+#include <memory>
 
 geo::Graphics::Graphics(VkInstance instance, VkSurfaceKHR surface)
     : instance(instance)
@@ -14,9 +15,10 @@ geo::Graphics::Graphics(VkInstance instance, VkSurfaceKHR surface)
     , deviceManager(nullptr)
     , pipeline(nullptr) {
 
-    vertecies.emplace_back(-0.5f, -0.5f);
-    vertecies.emplace_back(-0.5f, 0.5f);
-    vertecies.emplace_back(0.5f, -0.5f);
+    vertecies.emplace_back(-0.5f, 0.5f, 0.0f, 1.0f);
+    vertecies.emplace_back(-0.5f, -0.5f, 0.0f, 0.0f);
+    vertecies.emplace_back(0.5f, 0.5f, 1.0f, 1.0f);
+    vertecies.emplace_back(0.5f, -0.5f, 1.0f, 0.0f);
 }
 
 geo::Graphics::Graphics(VkInstance instance, VkSurfaceKHR surface, sp<DeviceManager> deviceManager)
@@ -25,9 +27,10 @@ geo::Graphics::Graphics(VkInstance instance, VkSurfaceKHR surface, sp<DeviceMana
     , deviceManager(std::move(deviceManager))
     , pipeline(nullptr) {
 
-    vertecies.emplace_back(-0.5f, 0.5f);
-    vertecies.emplace_back(-0.5f, -0.5f);
-    vertecies.emplace_back(0.5f, 0.5f);
+    vertecies.emplace_back(-0.5f, 0.5f, 0.0f, 1.0f);
+    vertecies.emplace_back(-0.5f, -0.5f, 0.0f, 0.0f);
+    vertecies.emplace_back(0.5f, 0.5f, 1.0f, 1.0f);
+    vertecies.emplace_back(0.5f, -0.5f, 1.0f, 0.0f);
 }
 
 void geo::Graphics::setup() {
@@ -138,7 +141,45 @@ void geo::Graphics::setup() {
     std::cout << "#> Graphics ready!" << std::endl;
 #endif
 
-    pipeline = std::make_shared<Pipeline>(deviceManager);
+    descriptorSetLayoutBinding.binding = 0;
+    descriptorSetLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+    descriptorSetLayoutBinding.descriptorCount = 1;
+    descriptorSetLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+    descriptorSetLayoutBinding.pImmutableSamplers = nullptr;
+
+    descriptorSetLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    descriptorSetLayoutCreateInfo.pNext = nullptr;
+    descriptorSetLayoutCreateInfo.flags = 0;
+    descriptorSetLayoutCreateInfo.bindingCount = 1;
+    descriptorSetLayoutCreateInfo.pBindings = &descriptorSetLayoutBinding;
+
+    vkCreateDescriptorSetLayout(logicalHandle, &descriptorSetLayoutCreateInfo, nullptr, &descriptorSetLayout);
+
+
+
+    descriptorPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    descriptorPoolSize.descriptorCount = 1;
+
+    descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    descriptorPoolCreateInfo.pNext = nullptr;
+    descriptorPoolCreateInfo.flags = 0;
+    descriptorPoolCreateInfo.maxSets = 1;
+    descriptorPoolCreateInfo.poolSizeCount = 1;
+    descriptorPoolCreateInfo.pPoolSizes = &descriptorPoolSize;
+
+    vkCreateDescriptorPool(logicalHandle, &descriptorPoolCreateInfo, nullptr, &descriptorPool);
+
+    descriptorSetAllocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    descriptorSetAllocateInfo.pNext = nullptr;
+    descriptorSetAllocateInfo.descriptorPool = descriptorPool;
+    descriptorSetAllocateInfo.descriptorSetCount = 1;
+    descriptorSetAllocateInfo.pSetLayouts = &descriptorSetLayout;
+
+    vkAllocateDescriptorSets(logicalHandle, &descriptorSetAllocateInfo, &descriptorSet);
+
+
+
+    pipeline = std::make_shared<Pipeline>(deviceManager, descriptorSetLayout);
     pipeline->setup();
 
     framebufferCreateInfos.resize(imageViews.size());
@@ -161,6 +202,26 @@ void geo::Graphics::setup() {
     command->setup();
     command->record();
     command->mapMemory(vertecies);
+
+    testImage = std::make_shared<Image>("../resources/rocket.png");
+    testImage->upload(deviceManager->getCurrentDevice(), command);
+
+    descriptorImageInfo.sampler = testImage->getSampler();
+    descriptorImageInfo.imageView = testImage->getImageView();
+    descriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+    writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeDescriptorSet.pNext = nullptr;
+    writeDescriptorSet.dstSet = descriptorSet;
+    writeDescriptorSet.dstBinding = 0;
+    writeDescriptorSet.dstArrayElement = 0;
+    writeDescriptorSet.descriptorCount = 1;
+    writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    writeDescriptorSet.pImageInfo = &descriptorImageInfo;
+    writeDescriptorSet.pBufferInfo = nullptr;
+    writeDescriptorSet.pTexelBufferView = nullptr;
+
+    vkUpdateDescriptorSets(logicalHandle, 1, &writeDescriptorSet, 0, nullptr);
 
     semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
     semaphoreCreateInfo.pNext = nullptr;

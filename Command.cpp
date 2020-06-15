@@ -61,6 +61,8 @@ void geo::Command::setup() {
 
     vkBindBufferMemory(logicalHandle, vertexBuffer, memory, 0);
 
+
+
     //record();
 }
 
@@ -91,7 +93,7 @@ void geo::Command::record() {
         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getVulkanPipeline());
         VkDeviceSize offsets[] {0};
         vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, offsets);
-        vkCmdDraw(commandBuffers[i], 3, 1, 0, 0); // TODO: Hardcoded vertex Count
+        vkCmdDraw(commandBuffers[i], 4, 1, 0, 0); // TODO: Hardcoded vertex Count
 
 
         vkCmdEndRenderPass(commandBuffers[i]);
@@ -112,4 +114,8 @@ void geo::Command::mapMemory(const std::vector<Vertex>& vertecies) {
     memcpy(data, (void*)vertecies.data(), bufferCreateInfo.size);
 
     vkUnmapMemory(logicalHandle, memory);
+}
+
+const VkCommandPool &geo::Command::getCommandPool() const {
+    return commandPool;
 }
