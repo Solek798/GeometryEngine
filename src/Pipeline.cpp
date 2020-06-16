@@ -149,7 +149,7 @@ void geo::Pipeline::setup() {
     attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR;
 
-    attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    attachmentReference.layout = VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR;
     attachmentReference.attachment = 0;
 
     subpassDescription.flags = 0;
@@ -233,4 +233,8 @@ const VkPipeline &geo::Pipeline::getVulkanPipeline() const {
 
 geo::Pipeline::operator VkPipeline() const {
     return pipeline;
+}
+
+const VkPipelineLayout &geo::Pipeline::getVulkanPipelineLayout() const {
+    return layout;
 }

@@ -28,6 +28,12 @@ namespace geo {
 
         [[nodiscard]] uint32_t findMemoryTypeIndex(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
 
+        void createBuffer(VkDeviceSize deviceSize,
+                VkBufferUsageFlags bufferUsageFlags,
+                VkBuffer &buffer,
+                VkMemoryPropertyFlags memoryPropertyFlags,
+                VkDeviceMemory &deviceMemory);
+
     private:
         VkDevice logicalHandle;
         VkPhysicalDevice physicalHandle;

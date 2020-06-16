@@ -19,6 +19,7 @@ namespace geo {
 
         [[nodiscard]] const VkRenderPass& getRenderPass() const;
         [[nodiscard]] const VkPipeline& getVulkanPipeline() const;
+        [[nodiscard]] const VkPipelineLayout& getVulkanPipelineLayout() const;
 
         operator VkPipeline() const;
     private:

@@ -29,7 +29,7 @@ int main() {
 
   std::cout << "Hello, World!" << std::endl;
 
-    //geo::Image image{"../resources/rocket.png"};*/
+    //geo::Image image{"../resources/rocket.png"};
 
 
   return 0;

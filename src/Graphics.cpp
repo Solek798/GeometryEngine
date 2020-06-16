@@ -142,7 +142,7 @@ void geo::Graphics::setup() {
 #endif
 
     descriptorSetLayoutBinding.binding = 0;
-    descriptorSetLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+    descriptorSetLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     descriptorSetLayoutBinding.descriptorCount = 1;
     descriptorSetLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
     descriptorSetLayoutBinding.pImmutableSamplers = nullptr;
@@ -178,8 +178,7 @@ void geo::Graphics::setup() {
     vkAllocateDescriptorSets(logicalHandle, &descriptorSetAllocateInfo, &descriptorSet);
 
 
-
-    pipeline = std::make_shared<Pipeline>(deviceManager, descriptorSetLayout);
+    pipeline = std::make_shared<Pipeline>(deviceManager, &descriptorSetLayout);
     pipeline->setup();
 
     framebufferCreateInfos.resize(imageViews.size());
@@ -198,10 +197,8 @@ void geo::Graphics::setup() {
         vkCreateFramebuffer(logicalHandle, &(framebufferCreateInfos[i]), nullptr, &(framebuffer[i]));
     }
 
-    command = std::make_shared<Command>(deviceManager, pipeline, framebuffer);
+    command = std::make_shared<Command>(deviceManager, pipeline, framebuffer, &descriptorSet);
     command->setup();
-    command->record();
-    command->mapMemory(vertecies);
 
     testImage = std::make_shared<Image>("../resources/rocket.png");
     testImage->upload(deviceManager->getCurrentDevice(), command);
@@ -222,6 +219,11 @@ void geo::Graphics::setup() {
     writeDescriptorSet.pTexelBufferView = nullptr;
 
     vkUpdateDescriptorSets(logicalHandle, 1, &writeDescriptorSet, 0, nullptr);
+
+    command->record();
+    command->mapMemory(vertecies);
+
+
 
     semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
     semaphoreCreateInfo.pNext = nullptr;

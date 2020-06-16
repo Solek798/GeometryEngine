@@ -155,5 +155,37 @@ uint32_t geo::Device::findMemoryTypeIndex(uint32_t typeFilter, VkMemoryPropertyF
     return -1;
 }
 
+void geo::Device::createBuffer(VkDeviceSize deviceSize, VkBufferUsageFlags bufferUsageFlags, VkBuffer &buffer,
+                               VkMemoryPropertyFlags memoryPropertyFlags, VkDeviceMemory &deviceMemory) {
+    // Start Create Buffer
+    VkBufferCreateInfo bufferCreateInfo;
+    bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufferCreateInfo.pNext = nullptr;
+    bufferCreateInfo.flags = 0;
+    bufferCreateInfo.size = deviceSize;
+    bufferCreateInfo.usage = bufferUsageFlags;
+    bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    bufferCreateInfo.queueFamilyIndexCount = 0;
+    bufferCreateInfo.pQueueFamilyIndices = nullptr;
+    vkCreateBuffer(logicalHandle, &bufferCreateInfo, nullptr, &buffer);
+
+    VkMemoryRequirements memoryRequirements;
+    vkGetBufferMemoryRequirements(logicalHandle, buffer, &memoryRequirements);
+
+    VkMemoryAllocateInfo memoryAllocateInfo;
+    memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memoryAllocateInfo.pNext = nullptr;
+    memoryAllocateInfo.allocationSize = memoryRequirements.size;
+    memoryAllocateInfo.memoryTypeIndex = findMemoryTypeIndex(
+            memoryRequirements.memoryTypeBits,
+            memoryPropertyFlags);
+
+    //VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+    vkAllocateMemory(logicalHandle, &memoryAllocateInfo, nullptr, &deviceMemory);
+
+    vkBindBufferMemory(logicalHandle, buffer, deviceMemory, 0);
+
+}
+
 
 

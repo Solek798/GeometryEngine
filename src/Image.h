@@ -79,8 +79,10 @@ namespace geo {
             auto logicalHandle = this->device->getLogicalHandle();
 
             VkDeviceSize size = getSize();
+            //VkBuffer stagingBuffer;
+            VkDeviceMemory stagingBufferMemory;
 
-            // Start Create Buffer
+            /*// Start Create Buffer
             VkBufferCreateInfo bufferCreateInfo;
             bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
             bufferCreateInfo.pNext = nullptr;
@@ -103,16 +105,23 @@ namespace geo {
                     memoryRequirements.memoryTypeBits,
                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
+            //VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
             vkAllocateMemory(logicalHandle, &memoryAllocateInfo, nullptr, &memory);
 
-            vkBindBufferMemory(logicalHandle, buffer, memory, 0);
+            vkBindBufferMemory(logicalHandle, buffer, memory, 0);*/
+
+            this->device->createBuffer(size,
+                    VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                    stagingBuffer,
+                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                    stagingBufferMemory);
 
             void* data = nullptr;
-            vkMapMemory(logicalHandle, memory, 0, bufferCreateInfo.size, 0, &data);
+            vkMapMemory(logicalHandle, stagingBufferMemory, 0, size, 0, &data);
 
-            memcpy(data, (void*)getData(), bufferCreateInfo.size);
+            memcpy(data, (void*)getData(), size);
 
-            vkUnmapMemory(logicalHandle, memory);
+            vkUnmapMemory(logicalHandle, stagingBufferMemory);
             // End Create Buffer
 
             VkImageCreateInfo imageCreateInfo;
@@ -134,14 +143,27 @@ namespace geo {
 
             vkCreateImage(logicalHandle, &imageCreateInfo, nullptr, &vkImage);
 
+            VkMemoryRequirements memoryRequirements;
+            vkGetImageMemoryRequirements(logicalHandle, vkImage, &memoryRequirements);
+
+            VkMemoryAllocateInfo memoryAllocateInfo;
+            memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+            memoryAllocateInfo.pNext = nullptr;
+            memoryAllocateInfo.allocationSize = memoryRequirements.size;
+            memoryAllocateInfo.memoryTypeIndex = this->device->findMemoryTypeIndex(
+                    memoryRequirements.memoryTypeBits,
+                    VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+            vkAllocateMemory(logicalHandle, &memoryAllocateInfo, nullptr, &memory);
+
             vkBindImageMemory(logicalHandle, vkImage, memory, 0);
 
             changeLayout(command, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
             writeBufferToImage(command);
             changeLayout(command, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
-            vkDestroyBuffer(logicalHandle, buffer, nullptr);
-            vkFreeMemory(logicalHandle, memory, nullptr);
+            vkDestroyBuffer(logicalHandle, stagingBuffer, nullptr);
+            vkFreeMemory(logicalHandle, stagingBufferMemory, nullptr);
 
             VkImageViewCreateInfo imageViewCreateInfo;
             imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -229,8 +251,8 @@ namespace geo {
             imageMemoryBarrier.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
 
             vkCmdPipelineBarrier(commandBuffer,
-                    VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                    VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                    imageMemoryBarrier.srcAccessMask == VK_ACCESS_HOST_WRITE_BIT ? VK_PIPELINE_STAGE_HOST_BIT : VK_PIPELINE_STAGE_TRANSFER_BIT,
+                    imageMemoryBarrier.dstAccessMask == VK_ACCESS_TRANSFER_WRITE_BIT ? VK_PIPELINE_STAGE_TRANSFER_BIT : VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
                     0,
                     0,
                     nullptr,
@@ -297,7 +319,7 @@ namespace geo {
                                            1};
 
             vkCmdCopyBufferToImage(commandBuffer,
-                    buffer,
+                    stagingBuffer,
                     vkImage,
                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                     1,
@@ -335,6 +357,8 @@ namespace geo {
         VkImageLayout vkImageLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
         VkSampler sampler;
         VkBuffer buffer;
+        VkBuffer stagingBuffer;
+
 
         bool uploaded;
         sp<Device> device;

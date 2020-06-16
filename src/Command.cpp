@@ -8,11 +8,11 @@
 #include <utility>
 #include <cstring>
 
-geo::Command::Command(sp<DeviceManager> deviceManager, sp<Pipeline> pipeline, std::vector<VkFramebuffer>& frameBuffer)
+geo::Command::Command(sp<DeviceManager> deviceManager, sp<Pipeline> pipeline, std::vector<VkFramebuffer>& frameBuffer, VkDescriptorSet* descriptorSet)
     : deviceManager(std::move(deviceManager))
     , pipeline(std::move(pipeline))
     , frameBuffer(frameBuffer) {
-
+    this->descriptorSet = descriptorSet;
 }
 
 void geo::Command::setup() {
@@ -93,8 +93,9 @@ void geo::Command::record() {
         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getVulkanPipeline());
         VkDeviceSize offsets[] {0};
         vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, offsets);
-        vkCmdDraw(commandBuffers[i], 4, 1, 0, 0); // TODO: Hardcoded vertex Count
+        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getVulkanPipelineLayout(), 0, 1, descriptorSet, 0, nullptr);
 
+        vkCmdDraw(commandBuffers[i], 4, 1, 0, 0); // TODO: Hardcoded vertex Count
 
         vkCmdEndRenderPass(commandBuffers[i]);
         vkEndCommandBuffer(commandBuffers[i]);

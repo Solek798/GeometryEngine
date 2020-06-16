@@ -14,7 +14,7 @@
 namespace geo {
     class Command : public Manageable {
     public:
-        Command(sp<DeviceManager> deviceManager, sp<Pipeline> pipeline, std::vector<VkFramebuffer>& frameBuffer);
+        Command(sp<DeviceManager> deviceManager, sp<Pipeline> pipeline, std::vector<VkFramebuffer>& frameBuffer, VkDescriptorSet* descriptorSet);
         virtual ~Command() = default;
 
         void setup() override;
@@ -38,6 +38,8 @@ namespace geo {
         VkMemoryRequirements memoryRequirements;
         VkMemoryAllocateInfo memoryAllocateInfo;
         VkDeviceMemory memory;
+
+        VkDescriptorSet* descriptorSet;
 
         sp<DeviceManager> deviceManager;
         sp<Pipeline> pipeline;
