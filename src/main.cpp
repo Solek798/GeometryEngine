@@ -2,13 +2,10 @@
 #include "stb/stb_image.h"
 #undef STB_IMAGE_IMPLEMENTATION
 
-#include <iostream>
 #include "Application.h"
+#include <iostream>
 #include <vector>
 #include <memory>
-
-#include "framework/Transform.h"
-#include "framework/Transform.h"
 
 using namespace geo::framework;
 
