@@ -14,7 +14,6 @@ find_package(glm)
 
 
 file(GLOB_RECURSE EXEC_HEADERS src/*.h)
-
 file(GLOB_RECURSE EXEC_SOURCES src/*.cpp)
 
 # set executable-files (set Project-Target)
