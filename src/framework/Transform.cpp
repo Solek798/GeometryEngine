@@ -12,7 +12,7 @@ geo::framework::Transform::Transform(const geo::framework::Vector2& position, fl
     : position(position)
     , rotation(rotation) { }
 
-geo::framework::Transform::Transform(float posX, float posY, float rotation)
+geo::framework::Transform::Transform(int32_t posX, int32_t posY, float rotation)
     : position(Vector2(posX, posY))
     , rotation(rotation) { }
 
@@ -47,7 +47,7 @@ void geo::framework::Transform::setRotation(float newRotation) {
 }
 
 
-void geo::framework::Transform::translate(float x, float y) {
+void geo::framework::Transform::translate(int32_t x, int32_t y) {
     position.add(x, y);
 }
 void geo::framework::Transform::translate(const geo::framework::Vector2 &offset) {

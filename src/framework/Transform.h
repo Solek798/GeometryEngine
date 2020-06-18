@@ -9,11 +9,11 @@
 #include "Vector2.h"
 
 namespace geo::framework {
-    class Transform {
+    struct Transform {
     public:
         Transform();
         Transform(const Vector2& position, float rotation);
-        Transform(float posX, float posY, float rotation);
+        Transform(int32_t posX, int32_t posY, float rotation);
         Transform(const Transform& other) = default;
         virtual ~Transform() = default;
 
@@ -25,7 +25,7 @@ namespace geo::framework {
         [[nodiscard]] float getRotation() const;
         void setRotation(float newRotation);
 
-        void translate(float x, float y);
+        void translate(int32_t x, int32_t y);
         void translate(const Vector2& offset);
         void rotate(float degrees);
 

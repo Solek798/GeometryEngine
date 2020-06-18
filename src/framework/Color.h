@@ -8,7 +8,7 @@
 #include <cstdint>
 
 namespace geo::framework {
-    class Color {
+    struct Color {
     public:
         static const Color BLACK;
         static const Color WHITE;
