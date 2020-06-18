@@ -8,16 +8,24 @@
 #include <Manageable.h>
 
 namespace geo::framework {
-    class Framework : Manageable {
+    class Framework : public Manageable {
     public:
+        // would be nicer if private but I couldn't bring it to work as friend Constructor for GeometryApplication
         Framework();
         virtual ~Framework();
-
         void setup() override;
         void shutdown() override;
 
+
+        void stop();
+
     private:
+        friend class GeometryApplication;
+
+        bool updateAndDraw();
+
         bool inValidState;
+        bool run; // Demo var to showcase ho Framework gets stopped. this is only one possible way
 
         // Inner Classes
     };

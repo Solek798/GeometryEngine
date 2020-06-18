@@ -10,21 +10,14 @@
 #include "framework/Sprite.h"
 #include "framework/Color.h"
 #include "framework/Transform.h"
+#include "TestApp.h"
 
 using namespace geo::framework;
 
 int main() {
-    Transform transform{10, 10, 45};
-    Color albedo{Color::MAGENTA};
-    Sprite player(albedo, transform);
+    TestApp app;
 
-    player.move(-1, 1);
-
-
-    auto position = player.getTransform().getPosition();
-
-    std::cout << "Player position: " << position.getX() << ", " << position.getY() << std::endl;
-    std::cout << "Player albedo: (" << static_cast<int>(player.getAlbedo().r) << ", " << player.getAlbedo().g << ", " <<player.getAlbedo().b << ", " << player.getAlbedo().a << ")" << std::endl;
+    app.run();
 
     /*geo::Application app;
 

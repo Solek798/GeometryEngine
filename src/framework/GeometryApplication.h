@@ -11,6 +11,10 @@
 namespace geo::framework {
     class GeometryApplication {
     public:
+        void run();
+        Framework& getFramework() const;
+
+    protected:
         GeometryApplication();
         virtual ~GeometryApplication() = default;
 
@@ -20,6 +24,7 @@ namespace geo::framework {
 
     private:
 
+        up<Framework> framework;
     };
 }
 
