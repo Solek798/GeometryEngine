@@ -178,7 +178,7 @@ void geo::Graphics::setup() {
     vkAllocateDescriptorSets(logicalHandle, &descriptorSetAllocateInfo, &descriptorSet);
 
 
-    pipeline = std::make_shared<Pipeline>(deviceManager, &descriptorSetLayout);
+    pipeline = std::make_shared<Pipeline>(deviceManager, &descriptorSetLayout, swapchainCreateInfo.imageFormat);
     pipeline->setup();
 
     framebufferCreateInfos.resize(imageViews.size());

@@ -11,7 +11,7 @@
 namespace geo {
     class Pipeline : public Manageable {
     public:
-        Pipeline(sp<DeviceManager> deviceManager, VkDescriptorSetLayout* descriptorSetLayout);
+        Pipeline(sp<DeviceManager> deviceManager, VkDescriptorSetLayout* descriptorSetLayout, VkFormat attachmentDescriptionFormat);
         virtual ~Pipeline() = default;
 
         void setup() override;
@@ -48,6 +48,8 @@ namespace geo {
 
         sp<DeviceManager> deviceManager;
         VkDescriptorSetLayout* descriptorSetLayout;
+
+        VkFormat attachmentDescriptionFormat;
     };
 }
 

@@ -8,7 +8,10 @@
 #include "Vertex.h"
 
 
-geo::Pipeline::Pipeline(sp<DeviceManager> deviceManager, VkDescriptorSetLayout* descriptorSetLayout) : deviceManager(std::move(deviceManager)), descriptorSetLayout(descriptorSetLayout) {
+geo::Pipeline::Pipeline(sp<DeviceManager> deviceManager, VkDescriptorSetLayout* descriptorSetLayout, VkFormat attachmentDescriptionFormat)
+    : deviceManager(std::move(deviceManager))
+    , descriptorSetLayout(descriptorSetLayout)
+    , attachmentDescriptionFormat(attachmentDescriptionFormat) {
 
 }
 
@@ -140,7 +143,7 @@ void geo::Pipeline::setup() {
 
     // Start Attachments
     attachmentDescription.flags = 0;
-    attachmentDescription.format = VK_FORMAT_B8G8R8A8_UNORM; //TODO: REALLY BAD INIT; should be the same as in SwapchainCreateInfo
+    attachmentDescription.format = attachmentDescriptionFormat;
     attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT; // TODO: Change if AA enabled
     attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; // I am not sure what this is good for
     attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
