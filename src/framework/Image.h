@@ -8,7 +8,10 @@
 
 namespace geo::framework {
     class Image {
-
+    public:
+        Image();
+        Image(const char* path);
+        virtual ~Image() = default;
     };
 }
 

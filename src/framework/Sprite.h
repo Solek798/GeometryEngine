@@ -9,9 +9,10 @@
 #include "Image.h"
 #include "GlobaleScope.h"
 #include "Color.h"
+#include "Detectable.h"
 
 namespace geo::framework {
-    class Sprite {
+    class Sprite : public Detectable{
     public:
         Sprite();
         Sprite(const Sprite& other);

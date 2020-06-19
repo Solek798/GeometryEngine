@@ -14,14 +14,26 @@
 #endif
 #include <iostream>
 
+up<geo::framework::Framework> geo::framework::Framework::instance = nullptr;
+
+geo::framework::Framework &geo::framework::Framework::get() {
+    return *instance;
+}
+
 geo::framework::Framework::Framework()
     : inValidState(false)
-    , run(false) { }
+    , run(false) {
+    if (!instance)
+        instance = up<Framework>(this);
+}
 
 geo::framework::Framework::~Framework() {
     if (inValidState) {
         shutdown();
     }
+    /*if (instance.get() == this) {
+        instance.release();
+    }*/
 }
 
 void geo::framework::Framework::setup() {
@@ -48,3 +60,13 @@ bool geo::framework::Framework::updateAndDraw() {
 void geo::framework::Framework::stop() {
     run = false;
 }
+
+void geo::framework::Framework::registerDetectable(geo::framework::Detectable* detectable) {
+    //detectables.emplace_back(detectable);
+}
+
+void geo::framework::Framework::unregisterDetectable(geo::framework::Detectable* detectable) {
+    //std::remove(detectables.front(), detectables.back(), detectable);
+}
+
+

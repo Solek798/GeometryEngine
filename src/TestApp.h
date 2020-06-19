@@ -6,6 +6,7 @@
 #define GEOMETRYENGINE_TESTAPP_H
 
 #include "framework/GeometryApplication.h"
+#include "framework/Sprite.h"
 
 class TestApp : public geo::framework::GeometryApplication {
 public:
@@ -18,6 +19,8 @@ public:
 
 private:
     float counter;
+
+    geo::framework::Sprite *sprite1, *sprite2;
 };
 
 

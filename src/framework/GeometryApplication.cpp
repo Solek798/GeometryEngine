@@ -4,21 +4,25 @@
 
 #include "GeometryApplication.h"
 
-geo::framework::GeometryApplication::GeometryApplication()
-    : framework(std::make_unique<Framework>()) { }
+geo::framework::GeometryApplication::GeometryApplication() {
+    // Create Singleton
+    Framework();
+}
 
 void geo::framework::GeometryApplication::run() {
-    framework->setup();
+    auto framework = geo::framework::Framework::get();
+
+    framework.setup();
     onStart();
 
-    while (framework->updateAndDraw()) {
+    while (framework.updateAndDraw()) {
         onUpdate();
     }
 
     onStop();
-    framework->shutdown();
+    framework.shutdown();
 }
 
-geo::framework::Framework &geo::framework::GeometryApplication::getFramework() const {
-    return *framework;
+geo::framework::GeometryApplication::~GeometryApplication() {
+    Framework::get().~Framework();
 }

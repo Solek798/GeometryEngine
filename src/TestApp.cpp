@@ -11,6 +11,11 @@ TestApp::TestApp() {
 
 void TestApp::onStart() {
     std::cout << "Start >>>>>>>" << std::endl;
+
+    sprite1 = new geo::framework::Sprite();
+    sprite2 = new geo::framework::Sprite();
+
+    //std::cout << "count: "<< geo::framework::Framework::get().getDetectables().size() << std::endl;
 }
 
 void TestApp::onUpdate() {
@@ -18,9 +23,13 @@ void TestApp::onUpdate() {
     counter++;
 
     if (counter > 5)
-        getFramework().stop();
+        geo::framework::Framework::get().stop();
 }
 
 void TestApp::onStop() {
     std::cout << "<<<<<<< Stop" << std::endl;
+    delete sprite1;
+    delete sprite2;
+
+    //std::cout << "count: "<< geo::framework::Framework::get().getDetectables().size() << std::endl;
 }

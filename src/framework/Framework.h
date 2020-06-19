@@ -6,26 +6,34 @@
 #define GEOMETRYENGINE_FRAMEWORK_H
 
 #include <Manageable.h>
+#include "Detectable.h"
+#include <vector>
 
 namespace geo::framework {
-    class Framework : public Manageable {
+class Framework : public geo::Manageable {
     public:
         // would be nicer if private but I couldn't bring it to work as friend Constructor for GeometryApplication
         Framework();
         virtual ~Framework();
         void setup() override;
         void shutdown() override;
-
+        bool updateAndDraw();
 
         void stop();
+        void registerDetectable(Detectable* detectable);
+        void unregisterDetectable(Detectable* detectable);
 
+        static Framework& get();
+
+        // Debug method. Get's removed after testing is done
+        //std::vector<Detectable*>& getDetectables() { return detectables; }
     private:
-        friend class GeometryApplication;
-
-        bool updateAndDraw();
+        static up<Framework> instance;
 
         bool inValidState;
         bool run; // Demo var to showcase ho Framework gets stopped. this is only one possible way
+        // allocating this class with this vector inside throws a weird exception. Couldn't fix it.
+        //std::vector<Detectable*> detectables;
 
         // Inner Classes
     };
